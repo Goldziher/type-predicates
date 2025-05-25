@@ -22,7 +22,7 @@ export function isArray<T>(
     input: unknown,
     options?: ValueValidator,
 ): input is T[] {
-    return createTypeGuard<T[], ValueValidator | undefined>(
+    return createTypeGuard<T[], undefined | ValueValidator>(
         (value) =>
             Array.isArray(value) &&
             (!options?.valueValidator || value.every(options.valueValidator)),

@@ -145,8 +145,8 @@ describe('assertIsArray', () => {
             assertIsArray<object>(recordArray, { valueValidator: isObject });
         }).not.toThrow();
         expect(() => {
-            assertIsArray<string | number>([...stringArray, ...numberArray], {
-                valueValidator: isUnion<string | number>(isString, isNumber),
+            assertIsArray<number | string>([...stringArray, ...numberArray], {
+                valueValidator: isUnion<number | string>(isString, isNumber),
             });
         }).not.toThrow();
     });
@@ -164,8 +164,8 @@ describe('assertIsArray', () => {
             assertIsArray<object>(recordArray, { valueValidator: isSymbol });
         }).toThrow();
         expect(() => {
-            assertIsArray<string | number>([...symbolArray, ...recordArray], {
-                valueValidator: isUnion<string | number>(isString, isNumber),
+            assertIsArray<number | string>([...symbolArray, ...recordArray], {
+                valueValidator: isUnion<number | string>(isString, isNumber),
             });
         }).toThrow();
     });
@@ -216,10 +216,10 @@ describe('assertIsSet', () => {
             });
         }).not.toThrow();
         expect(() => {
-            assertIsSet<string | number>(
-                new Set([...stringArray, ...numberArray]),
+            assertIsSet<number | string>(
+                new Set([...numberArray, ...stringArray]),
                 {
-                    valueValidator: isUnion<string | number>(
+                    valueValidator: isUnion<number | string>(
                         isString,
                         isNumber,
                     ),
@@ -249,10 +249,10 @@ describe('assertIsSet', () => {
             });
         }).toThrow();
         expect(() => {
-            assertIsSet<string | number>(
-                new Set([...symbolArray, ...recordArray]),
+            assertIsSet<number | string>(
+                new Set([...recordArray, ...symbolArray]),
                 {
-                    valueValidator: isUnion<string | number>(
+                    valueValidator: isUnion<number | string>(
                         isString,
                         isNumber,
                     ),
@@ -305,19 +305,19 @@ describe('assertIsMap', () => {
             });
         }).not.toThrow();
         expect(() => {
-            assertIsMap<string | number | symbol, string | number | symbol>(
-                new Map<string | number | symbol, string | number | symbol>([
+            assertIsMap<number | string | symbol, number | string | symbol>(
+                new Map<number | string | symbol, number | string | symbol>([
                     ...stringMap,
                     ...numberMap,
                     ...symbolMap,
                 ]),
                 {
-                    keyValidator: isUnion<string | number | symbol>(
+                    keyValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,
                     ),
-                    valueValidator: isUnion<string | number | symbol>(
+                    valueValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,
@@ -326,17 +326,17 @@ describe('assertIsMap', () => {
             );
         }).not.toThrow();
         expect(() => {
-            assertIsMap<object | boolean, object | boolean>(
-                new Map<object | boolean, object | boolean>([
+            assertIsMap<boolean | object, boolean | object>(
+                new Map<boolean | object, boolean | object>([
                     ...recordMap,
                     ...booleanMap,
                 ]),
                 {
-                    keyValidator: isUnion<object | boolean>(
+                    keyValidator: isUnion<boolean | object>(
                         isObject,
                         isBoolean,
                     ),
-                    valueValidator: isUnion<object | boolean>(
+                    valueValidator: isUnion<boolean | object>(
                         isObject,
                         isBoolean,
                     ),
@@ -410,12 +410,12 @@ describe('assertIsRecord', () => {
                     ...symbolRecord,
                 },
                 {
-                    keyValidator: isUnion<string | number | symbol>(
+                    keyValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,
                     ),
-                    valueValidator: isUnion<string | number | symbol>(
+                    valueValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,

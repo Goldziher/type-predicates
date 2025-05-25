@@ -38,7 +38,7 @@ export function assertIsMap<K>(
 ): asserts input is Map<K, unknown>;
 export function assertIsMap<K>(
     input: unknown,
-    options: KeyValidator & ErrorMessage,
+    options: ErrorMessage & KeyValidator,
 ): asserts input is Map<K, unknown>;
 export function assertIsMap<V>(
     input: unknown,
@@ -46,22 +46,22 @@ export function assertIsMap<V>(
 ): asserts input is Map<string, V>;
 export function assertIsMap<V>(
     input: unknown,
-    options: ValueValidator & ErrorMessage,
+    options: ErrorMessage & ValueValidator,
 ): asserts input is Map<string, V>;
 export function assertIsMap<K, V>(
     input: unknown,
-    options: ValueValidator & KeyValidator,
+    options: KeyValidator & ValueValidator,
 ): asserts input is Map<K, V>;
 export function assertIsMap<K, V>(
     input: unknown,
-    options: ValueValidator & KeyValidator & ErrorMessage,
+    options: ErrorMessage & KeyValidator & ValueValidator,
 ): asserts input is Map<K, V>;
 export function assertIsMap<K, V>(
     input: unknown,
-    options?: Partial<ValueValidator & KeyValidator & ErrorMessage>,
+    options?: Partial<ErrorMessage & KeyValidator & ValueValidator>,
 ): asserts input is Map<K, V> {
     createTypeAssertion<
         Map<K, V>,
-        Partial<ValueValidator & KeyValidator & ErrorMessage> | undefined
+        Partial<ErrorMessage & KeyValidator & ValueValidator> | undefined
     >(isMap)(input, options);
 }

@@ -30,14 +30,14 @@ export function assertIsArray<T>(
 ): asserts input is T[];
 export function assertIsArray<T>(
     input: unknown,
-    options: ValueValidator & ErrorMessage,
+    options: ErrorMessage & ValueValidator,
 ): asserts input is T[];
 export function assertIsArray<T>(
     input: unknown,
-    options?: Partial<ValueValidator & ErrorMessage>,
+    options?: Partial<ErrorMessage & ValueValidator>,
 ): asserts input is T[] {
     createTypeAssertion<
         T[],
-        Partial<ValueValidator & ErrorMessage> | undefined
+        Partial<ErrorMessage & ValueValidator> | undefined
     >(isArray)(input, options);
 }

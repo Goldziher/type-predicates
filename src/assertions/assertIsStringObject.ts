@@ -5,4 +5,4 @@ import { createTypeAssertion } from '../utils';
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsStringObject = createTypeAssertion<String>(isStringObject);
+export const assertIsStringObject = createTypeAssertion<string>(isStringObject);

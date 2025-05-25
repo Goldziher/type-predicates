@@ -13,7 +13,7 @@ import { isObject } from './isObject';
  * isStringObject('xyz');
  * ```
  */
-export const isStringObject = createTypeGuard<String>(
+export const isStringObject = createTypeGuard<string>(
     (value) =>
         isObject(value) &&
         (toObjectString(value) === '[object String]' ||

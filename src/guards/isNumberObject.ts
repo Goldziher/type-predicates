@@ -13,7 +13,7 @@ import { isObject } from './isObject';
  * isNumberObject(1);
  * ```
  */
-export const isNumberObject = createTypeGuard<Number>(
+export const isNumberObject = createTypeGuard<number>(
     (value) =>
         isObject(value) &&
         (toObjectString(value) === '[object Number]' ||

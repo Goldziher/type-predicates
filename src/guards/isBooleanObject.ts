@@ -13,7 +13,7 @@ import { isObject } from './isObject';
  * isBooleanObject(true);
  * ```
  */
-export const isBooleanObject = createTypeGuard<Boolean>(
+export const isBooleanObject = createTypeGuard<boolean>(
     (value) =>
         isObject(value) &&
         (toObjectString(value) === '[object Boolean]' ||

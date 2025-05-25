@@ -1,12 +1,3 @@
-<div align="center">
-
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=tool-belt_type-predicates&metric=coverage)](https://sonarcloud.io/summary/new_code?id=tool-belt_type-predicates)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=tool-belt_type-predicates&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=tool-belt_type-predicates)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=tool-belt_type-predicates&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=tool-belt_type-predicates)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=tool-belt_type-predicates&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=tool-belt_type-predicates)
-
-</div>
-
 # @tool-belt/type-predicates
 
 ## Installation

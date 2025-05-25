@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-// eslint-disable-next-line import/no-unresolved
 import { PackageJson } from 'type-fest';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';

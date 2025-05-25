@@ -4,6 +4,6 @@
  * exclude undefined
  * @category Type Guard
  */
-export function isNotNull<T>(input: T | null): input is T {
+export function isNotNull<T>(input: null | T): input is T {
     return input !== null;
 }

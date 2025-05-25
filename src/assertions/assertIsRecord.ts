@@ -35,7 +35,7 @@ export function assertIsRecord<K extends string | symbol>(
 ): asserts input is Record<K, unknown>;
 export function assertIsRecord<K extends string | symbol>(
     input: unknown,
-    options: KeyValidator & ErrorMessage,
+    options: ErrorMessage & KeyValidator,
 ): asserts input is Record<K, unknown>;
 export function assertIsRecord<V>(
     input: unknown,
@@ -43,22 +43,22 @@ export function assertIsRecord<V>(
 ): asserts input is Record<string, V>;
 export function assertIsRecord<V>(
     input: unknown,
-    options: ValueValidator & ErrorMessage,
+    options: ErrorMessage & ValueValidator,
 ): asserts input is Record<string, V>;
 export function assertIsRecord<K extends string | symbol, V>(
     input: unknown,
-    options: ValueValidator & KeyValidator,
+    options: KeyValidator & ValueValidator,
 ): asserts input is Record<K, V>;
 export function assertIsRecord<K extends string | symbol, V>(
     input: unknown,
-    options: ValueValidator & KeyValidator & ErrorMessage,
+    options: ErrorMessage & KeyValidator & ValueValidator,
 ): asserts input is Record<K, V>;
 export function assertIsRecord<K extends string | symbol, V>(
     input: unknown,
-    options?: Partial<ValueValidator & KeyValidator & ErrorMessage>,
+    options?: Partial<ErrorMessage & KeyValidator & ValueValidator>,
 ): asserts input is Record<K, V> {
     createTypeAssertion<
         Record<K, V>,
-        Partial<ValueValidator & KeyValidator & ErrorMessage> | undefined
+        Partial<ErrorMessage & KeyValidator & ValueValidator> | undefined
     >(isRecord)(input, options);
 }

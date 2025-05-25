@@ -140,8 +140,8 @@ describe('isArray', () => {
             isArray<object>(recordArray, { valueValidator: isObject }),
         ).toBeTruthy();
         expect(
-            isArray<string | number>([...stringArray, ...numberArray], {
-                valueValidator: isUnion<string | number>(isString, isNumber),
+            isArray<number | string>([...stringArray, ...numberArray], {
+                valueValidator: isUnion<number | string>(isString, isNumber),
             }),
         ).toBeTruthy();
     });
@@ -159,8 +159,8 @@ describe('isArray', () => {
             isArray<object>(recordArray, { valueValidator: isSymbol }),
         ).toBeFalsy();
         expect(
-            isArray<string | number>([...symbolArray, ...recordArray], {
-                valueValidator: isUnion<string | number>(isString, isNumber),
+            isArray<number | string>([...symbolArray, ...recordArray], {
+                valueValidator: isUnion<number | string>(isString, isNumber),
             }),
         ).toBeFalsy();
     });
@@ -198,8 +198,8 @@ describe('isSet', () => {
             isSet<object>(new Set(recordArray), { valueValidator: isObject }),
         ).toBeTruthy();
         expect(
-            isSet<string | number>(new Set([...stringArray, ...numberArray]), {
-                valueValidator: isUnion<string | number>(isString, isNumber),
+            isSet<number | string>(new Set([...numberArray, ...stringArray]), {
+                valueValidator: isUnion<number | string>(isString, isNumber),
             }),
         ).toBeTruthy();
     });
@@ -217,8 +217,8 @@ describe('isSet', () => {
             isSet<object>(new Set(recordArray), { valueValidator: isSymbol }),
         ).toBeFalsy();
         expect(
-            isSet<string | number>(new Set([...symbolArray, ...recordArray]), {
-                valueValidator: isUnion<string | number>(isString, isNumber),
+            isSet<number | string>(new Set([...recordArray, ...symbolArray]), {
+                valueValidator: isUnion<number | string>(isString, isNumber),
             }),
         ).toBeFalsy();
     });
@@ -267,19 +267,19 @@ describe('isMap', () => {
             }),
         ).toBeTruthy();
         expect(
-            isMap<string | number | symbol, string | number | symbol>(
-                new Map<string | number | symbol, string | number | symbol>([
+            isMap<number | string | symbol, number | string | symbol>(
+                new Map<number | string | symbol, number | string | symbol>([
                     ...stringMap,
                     ...numberMap,
                     ...symbolMap,
                 ]),
                 {
-                    keyValidator: isUnion<string | number | symbol>(
+                    keyValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,
                     ),
-                    valueValidator: isUnion<string | number | symbol>(
+                    valueValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,
@@ -288,17 +288,17 @@ describe('isMap', () => {
             ),
         ).toBeTruthy();
         expect(
-            isMap<object | boolean, object | boolean>(
-                new Map<object | boolean, object | boolean>([
+            isMap<boolean | object, boolean | object>(
+                new Map<boolean | object, boolean | object>([
                     ...recordMap,
                     ...booleanMap,
                 ]),
                 {
-                    keyValidator: isUnion<object | boolean>(
+                    keyValidator: isUnion<boolean | object>(
                         isObject,
                         isBoolean,
                     ),
-                    valueValidator: isUnion<object | boolean>(
+                    valueValidator: isUnion<boolean | object>(
                         isObject,
                         isBoolean,
                     ),
@@ -373,12 +373,12 @@ describe('isRecord', () => {
                     ...symbolRecord,
                 },
                 {
-                    keyValidator: isUnion<string | number | symbol>(
+                    keyValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,
                     ),
-                    valueValidator: isUnion<string | number | symbol>(
+                    valueValidator: isUnion<number | string | symbol>(
                         isString,
                         isNumber,
                         isSymbol,
@@ -432,7 +432,7 @@ describe('isRecord', () => {
 describe.each([
     [
         'Union',
-        isUnion<string | symbol | number>(isString, isNumber, isSymbol),
+        isUnion<number | string | symbol>(isString, isNumber, isSymbol),
         ['abc', 1, Symbol()],
         [undefined, true, ...objectValues, ...functionValues],
     ],

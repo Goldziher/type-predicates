@@ -18,6 +18,26 @@ export const toObjectString = (value: unknown): string =>
  * @example
  *
  * ```typescript
+ * // myTypeAssertion === (input: unknown) => asserts input is MyClass
+ * const myTypeAssertion = createTypeAssertion<MyClass>(guard: TypeGuard<MyClass>)
+ * ```
+ */
+export function createTypeAssertion<
+    T,
+    O extends TypeAssertionOptions | undefined = ErrorMessage,
+>(guard: TypeGuard<T, any>): TypeAssertion<T, O> {
+    return (input: unknown, options?: O): asserts input is T => {
+        if (!guard(input, options)) {
+            throw new TypeError(options?.message);
+        }
+    };
+}
+
+/**
+ * @category Utility
+ * @example
+ *
+ * ```typescript
  * // myTypeGuard === (input: unknown, { throwError: boolean }) => input is MyClass
  * const myTypeGuard = createTypeGuard<MyClass>(
  *     (value) => isObject(value) && Reflect.get(value, 'myProp'),
@@ -32,26 +52,6 @@ export function createTypeGuard<
     return options
         ? (input: unknown): input is T => validator(input, options)
         : (input: unknown): input is T => validator(input);
-}
-
-/**
- * @category Utility
- * @example
- *
- * ```typescript
- * // myTypeAssertion === (input: unknown) => asserts input is MyClass
- * const myTypeAssertion = createTypeAssertion<MyClass>(guard: TypeGuard<MyClass>)
- * ```
- */
-export function createTypeAssertion<
-    T,
-    O extends TypeAssertionOptions | undefined = ErrorMessage,
->(guard: TypeGuard<T, any>): TypeAssertion<T, O> {
-    return (input: unknown, options?: O): asserts input is T => {
-        if (!guard(input, options)) {
-            throw new TypeError(options?.message);
-        }
-    };
 }
 
 /**

@@ -33,15 +33,15 @@ export function isRecord<V>(
 ): input is Record<string, V>;
 export function isRecord<K extends string | symbol, V>(
     input: unknown,
-    options: ValueValidator & KeyValidator,
+    options: KeyValidator & ValueValidator,
 ): input is Record<K, V>;
 export function isRecord<K extends string | symbol, V>(
     input: unknown,
-    options?: Partial<ValueValidator & KeyValidator>,
+    options?: Partial<KeyValidator & ValueValidator>,
 ): input is Record<K, V> {
     return createTypeGuard<
         Record<K, V>,
-        undefined | Partial<ValueValidator & KeyValidator>
+        Partial<KeyValidator & ValueValidator> | undefined
     >(
         (value) =>
             isObject(value) &&

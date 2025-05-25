@@ -23,7 +23,7 @@ export function isSet<T>(
     input: unknown,
     options?: ValueValidator,
 ): input is Set<T> {
-    return createTypeGuard<Set<T>, ValueValidator | undefined>(
+    return createTypeGuard<Set<T>, undefined | ValueValidator>(
         (value) =>
             isObject(value) &&
             (toObjectString(value) === '[object Set]' ||

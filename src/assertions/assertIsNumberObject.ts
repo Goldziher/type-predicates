@@ -15,4 +15,4 @@ import { createTypeAssertion } from '../utils';
  *
  * @throws TypeError
  */
-export const assertIsNumberObject = createTypeAssertion<Number>(isNumberObject);
+export const assertIsNumberObject = createTypeAssertion<number>(isNumberObject);

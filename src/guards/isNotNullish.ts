@@ -7,7 +7,7 @@ import { isNotNull } from './isNotNull';
  * @category Type Guard
  */
 export function isNotNullish<T>(
-    input: T | undefined | null,
+    input: null | T | undefined,
 ): input is NonNullable<T> {
     return isDefined(input) && isNotNull(input);
 }

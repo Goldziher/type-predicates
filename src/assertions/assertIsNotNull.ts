@@ -9,7 +9,7 @@ import { ErrorMessage } from '../types';
  * @throws TypeError
  */
 export function assertIsNotNull<T>(
-    input: T | null,
+    input: null | T,
     options?: ErrorMessage,
 ): asserts input is T {
     if (isNull(input)) {

@@ -34,15 +34,15 @@ export function isMap<V>(
 ): input is Map<unknown, V>;
 export function isMap<K, V>(
     input: unknown,
-    options: ValueValidator & KeyValidator,
+    options: KeyValidator & ValueValidator,
 ): input is Map<K, V>;
 export function isMap<K, V>(
     input: unknown,
-    options?: Partial<ValueValidator & KeyValidator>,
+    options?: Partial<KeyValidator & ValueValidator>,
 ): input is Map<K, V> {
     return createTypeGuard<
         Map<K, V>,
-        Partial<ValueValidator & KeyValidator> | undefined
+        Partial<KeyValidator & ValueValidator> | undefined
     >(
         (value) =>
             (value instanceof Map ||

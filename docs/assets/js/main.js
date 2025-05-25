@@ -89,23 +89,6 @@
                 /***/
             },
 
-        /***/ './default/assets/js/src/typedoc/EventTarget.ts':
-            /*!******************************************************!*\
-  !*** ./default/assets/js/src/typedoc/EventTarget.ts ***!
-  \******************************************************/
-            /***/ (
-                __unused_webpack_module,
-                __webpack_exports__,
-                __webpack_require__,
-            ) => {
-                'use strict';
-                eval(
-                    '__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "EventTarget": () => /* binding */ EventTarget\n/* harmony export */ });\n/**\n * TypeDoc event target class.\n */\nvar EventTarget = /** @class */ (function () {\n    function EventTarget() {\n        this.listeners = {};\n    }\n    EventTarget.prototype.addEventListener = function (type, callback) {\n        if (!(type in this.listeners)) {\n            this.listeners[type] = [];\n        }\n        this.listeners[type].push(callback);\n    };\n    EventTarget.prototype.removeEventListener = function (type, callback) {\n        if (!(type in this.listeners)) {\n            return;\n        }\n        var stack = this.listeners[type];\n        for (var i = 0, l = stack.length; i < l; i++) {\n            if (stack[i] === callback) {\n                stack.splice(i, 1);\n                return;\n            }\n        }\n    };\n    EventTarget.prototype.dispatchEvent = function (event) {\n        if (!(event.type in this.listeners)) {\n            return true;\n        }\n        var stack = this.listeners[event.type].slice();\n        for (var i = 0, l = stack.length; i < l; i++) {\n            stack[i].call(this, event);\n        }\n        return !event.defaultPrevented;\n    };\n    return EventTarget;\n}());\n\n\n\n//# sourceURL=webpack:///./default/assets/js/src/typedoc/EventTarget.ts?',
-                );
-
-                /***/
-            },
-
         /***/ './default/assets/js/src/typedoc/components/Filter.ts':
             /*!************************************************************!*\
   !*** ./default/assets/js/src/typedoc/components/Filter.ts ***!
@@ -186,6 +169,23 @@
                 'use strict';
                 eval(
                     '__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "Toggle": () => /* binding */ Toggle\n/* harmony export */ });\n/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component */ "./default/assets/js/src/typedoc/Component.ts");\n/* harmony import */ var _utils_pointer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/pointer */ "./default/assets/js/src/typedoc/utils/pointer.ts");\nvar __extends = (undefined && undefined.__extends) || (function () {\n    var extendStatics = function (d, b) {\n        extendStatics = Object.setPrototypeOf ||\n            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||\n            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };\n        return extendStatics(d, b);\n    };\n    return function (d, b) {\n        extendStatics(d, b);\n        function __() { this.constructor = d; }\n        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());\n    };\n})();\n\n\nvar Toggle = /** @class */ (function (_super) {\n    __extends(Toggle, _super);\n    function Toggle(options) {\n        var _this = _super.call(this, options) || this;\n        _this.className = _this.el.dataset.toggle || "";\n        _this.el.addEventListener(_utils_pointer__WEBPACK_IMPORTED_MODULE_1__.pointerUp, function (e) { return _this.onPointerUp(e); });\n        _this.el.addEventListener("click", function (e) { return e.preventDefault(); });\n        document.addEventListener(_utils_pointer__WEBPACK_IMPORTED_MODULE_1__.pointerDown, function (e) {\n            return _this.onDocumentPointerDown(e);\n        });\n        document.addEventListener(_utils_pointer__WEBPACK_IMPORTED_MODULE_1__.pointerUp, function (e) {\n            return _this.onDocumentPointerUp(e);\n        });\n        return _this;\n    }\n    Toggle.prototype.setActive = function (value) {\n        if (this.active == value)\n            return;\n        this.active = value;\n        document.documentElement.classList.toggle("has-" + this.className, value);\n        this.el.classList.toggle("active", value);\n        var transition = (this.active ? "to-has-" : "from-has-") + this.className;\n        document.documentElement.classList.add(transition);\n        setTimeout(function () { return document.documentElement.classList.remove(transition); }, 500);\n    };\n    Toggle.prototype.onPointerUp = function (event) {\n        if (_utils_pointer__WEBPACK_IMPORTED_MODULE_1__.hasPointerMoved)\n            return;\n        this.setActive(true);\n        event.preventDefault();\n    };\n    Toggle.prototype.onDocumentPointerDown = function (e) {\n        if (this.active) {\n            if (e.target.closest(".col-menu, .tsd-filter-group")) {\n                return;\n            }\n            this.setActive(false);\n        }\n    };\n    Toggle.prototype.onDocumentPointerUp = function (e) {\n        var _this = this;\n        if (_utils_pointer__WEBPACK_IMPORTED_MODULE_1__.hasPointerMoved)\n            return;\n        if (this.active) {\n            if (e.target.closest(".col-menu")) {\n                var link = e.target.closest("a");\n                if (link) {\n                    var href = window.location.href;\n                    if (href.indexOf("#") != -1) {\n                        href = href.substr(0, href.indexOf("#"));\n                    }\n                    if (link.href.substr(0, href.length) == href) {\n                        setTimeout(function () { return _this.setActive(false); }, 250);\n                    }\n                }\n            }\n        }\n    };\n    return Toggle;\n}(_Component__WEBPACK_IMPORTED_MODULE_0__.Component));\n\n\n\n//# sourceURL=webpack:///./default/assets/js/src/typedoc/components/Toggle.ts?',
+                );
+
+                /***/
+            },
+
+        /***/ './default/assets/js/src/typedoc/EventTarget.ts':
+            /*!******************************************************!*\
+  !*** ./default/assets/js/src/typedoc/EventTarget.ts ***!
+  \******************************************************/
+            /***/ (
+                __unused_webpack_module,
+                __webpack_exports__,
+                __webpack_require__,
+            ) => {
+                'use strict';
+                eval(
+                    '__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "EventTarget": () => /* binding */ EventTarget\n/* harmony export */ });\n/**\n * TypeDoc event target class.\n */\nvar EventTarget = /** @class */ (function () {\n    function EventTarget() {\n        this.listeners = {};\n    }\n    EventTarget.prototype.addEventListener = function (type, callback) {\n        if (!(type in this.listeners)) {\n            this.listeners[type] = [];\n        }\n        this.listeners[type].push(callback);\n    };\n    EventTarget.prototype.removeEventListener = function (type, callback) {\n        if (!(type in this.listeners)) {\n            return;\n        }\n        var stack = this.listeners[type];\n        for (var i = 0, l = stack.length; i < l; i++) {\n            if (stack[i] === callback) {\n                stack.splice(i, 1);\n                return;\n            }\n        }\n    };\n    EventTarget.prototype.dispatchEvent = function (event) {\n        if (!(event.type in this.listeners)) {\n            return true;\n        }\n        var stack = this.listeners[event.type].slice();\n        for (var i = 0, l = stack.length; i < l; i++) {\n            stack[i].call(this, event);\n        }\n        return !event.defaultPrevented;\n    };\n    return EventTarget;\n}());\n\n\n\n//# sourceURL=webpack:///./default/assets/js/src/typedoc/EventTarget.ts?',
                 );
 
                 /***/

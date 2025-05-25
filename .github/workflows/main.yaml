@@ -15,18 +15,13 @@ jobs:
             - name: Install Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 22
             - uses: pnpm/action-setup@v3.0.0
               name: Install pnpm
               id: pnpm-install
               with:
-                  version: 8
+                  version: 10
             - name: Install Dependencies
               run: pnpm install
             - name: test
-              run: pnpm run test:coverage
-            - name: SonarCloud Scan
-              uses: sonarsource/sonarcloud-github-action@master
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+              run: pnpm run test

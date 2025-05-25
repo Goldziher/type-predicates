@@ -9,7 +9,7 @@ import { ErrorMessage } from '../types';
  * @throws TypeError
  */
 export function assertIsNotNullish<T>(
-    input: T | undefined | null,
+    input: null | T | undefined,
     options?: ErrorMessage,
 ): asserts input is T {
     if (isUndefined(input) || isNull(input)) {

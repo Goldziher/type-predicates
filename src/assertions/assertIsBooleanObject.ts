@@ -6,4 +6,4 @@ import { createTypeAssertion } from '../utils';
  * @throws TypeError
  */
 export const assertIsBooleanObject =
-    createTypeAssertion<Boolean>(isBooleanObject);
+    createTypeAssertion<boolean>(isBooleanObject);

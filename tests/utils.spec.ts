@@ -24,11 +24,13 @@ describe('createTypeGuard', () => {
                 return false;
             }
             // @ts-ignore - optional property access
-            return !opts?.valueValidator || opts.valueValidator(value);
-        });
+            if (opts?.valueValidator) {
+                return opts.valueValidator(value);
+            }
+            return true;
+        }, options);
         const testValue = new CustomClass();
-        // @ts-ignore - mock type issue
-        expect(typeGuard(testValue, options)).toBe(true);
+        expect(typeGuard(testValue)).toBe(true);
         expect(mock).toHaveBeenCalledWith(testValue);
     });
 });

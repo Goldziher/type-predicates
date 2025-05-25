@@ -1275,11 +1275,17 @@ describe.each([
         expected: unknown[],
         failed: unknown[],
     ) => {
-        it.each(expected)(`returns true for expected values`, (value) => {
-            expect(guard(value)).toBeTruthy();
-        });
-        it.each(failed)(`returns false for non-expected values`, (value) => {
-            expect(guard(value)).toBeFalsy();
-        });
+        it.each(expected.map((v) => [v]))(
+            `returns true for expected values`,
+            (value) => {
+                expect(guard(value)).toBeTruthy();
+            },
+        );
+        it.each(failed.map((v) => [v]))(
+            `returns false for non-expected values`,
+            (value) => {
+                expect(guard(value)).toBeFalsy();
+            },
+        );
     },
 );

@@ -1251,17 +1251,23 @@ describe.each([
         expected: unknown[],
         failed: unknown[],
     ) => {
-        it.each(expected)(`does not throw for expected values`, (value) => {
-            expect(() => {
-                assertion(value);
-            }).not.toThrow();
-        });
-        it.each(failed)(`throws for non-expected values`, (value) => {
-            expect(() => {
-                assertion(value);
-            }).toThrow();
-        });
-        it.each(failed)(`with custom message`, (value) => {
+        it.each(expected.map((v) => [v]))(
+            `does not throw for expected values`,
+            (value) => {
+                expect(() => {
+                    assertion(value);
+                }).not.toThrow();
+            },
+        );
+        it.each(failed.map((v) => [v]))(
+            `throws for non-expected values`,
+            (value) => {
+                expect(() => {
+                    assertion(value);
+                }).toThrow();
+            },
+        );
+        it.each(failed.map((v) => [v]))(`with custom message`, (value) => {
             expect(() => {
                 assertion(value, { message: CUSTOM_MESSAGE });
             }).toThrow(CUSTOM_MESSAGE);

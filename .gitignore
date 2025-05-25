@@ -1,4 +1,5 @@
 *.log
+*.tsbuildinfo
 .husky/
 .idea/
 coverage/

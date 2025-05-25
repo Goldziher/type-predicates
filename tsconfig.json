@@ -15,6 +15,11 @@
         "strictNullChecks": true,
         "target": "ESNext",
         "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
         "types": ["vitest/globals", "vitest"]
     }
 }

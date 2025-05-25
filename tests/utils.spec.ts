@@ -1,5 +1,7 @@
 import { createTypeAssertion, createTypeGuard, ValueValidator } from '../src';
 
+// Used for testing type guards and assertions
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class CustomClass {}
 const customTypeGuard = createTypeGuard<CustomClass>(
     (value) => value instanceof CustomClass,

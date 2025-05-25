@@ -132,6 +132,7 @@ export default eslintTS.config(
             'tsdoc/syntax': 0,
             'unicorn/catch-error-name': 'off',
             'unicorn/explicit-length-check': 'off',
+            'unicorn/filename-case': 'off',
             'unicorn/no-array-callback-reference': 'off',
             'unicorn/no-array-for-each': 'off',
             'unicorn/no-array-reduce': 'off',

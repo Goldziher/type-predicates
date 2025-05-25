@@ -75,6 +75,8 @@ const numberMap = new Map([[100, 100]]);
 const symbolMap = new Map([[Symbol('x'), Symbol('y')]]);
 const booleanMap = new Map([[false, true]]);
 const recordMap = new Map([[{ key: 1 }, { value: 1 }]]);
+// Used for testing type guards and assertions
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class CustomClass {}
 const stringRecord = { name: 'xyz' };
 const numberRecord = { 1: 100 };
@@ -83,7 +85,7 @@ const promise = new Promise((resolve) => {
     resolve(null);
 });
 const primitiveValues = [true, false, 0, 1, '', undefined, Symbol()];
-const iterableObjects = [new Map(), new Set(), new String(), []];
+const iterableObjects = [new Map(), new Set(), String(''), []];
 const buffers = [new ArrayBuffer(8), Buffer.alloc(8), new SharedArrayBuffer(8)];
 const errors = [
     new Error(),
@@ -109,8 +111,8 @@ const typedArrays = [
 ];
 const objectValues = [
     {},
-    new Number(),
-    new Boolean(),
+    Number(0),
+    Boolean(false),
     new WeakMap(),
     new WeakSet(),
     ...iterableObjects,
@@ -577,30 +579,36 @@ describe.each([
     [
         'String',
         isStringObject,
-        [new String('x')],
+        [String('x')],
         [
             ...primitiveValues,
-            ...objectValues.filter((v) => !(v instanceof String)),
+            ...objectValues.filter(
+                (v) => Object.prototype.toString.call(v) !== '[object String]',
+            ),
             ...functionValues,
         ],
     ],
     [
         'Boolean',
         isBooleanObject,
-        [new Boolean(true)],
+        [Boolean(true)],
         [
             ...primitiveValues,
-            ...objectValues.filter((v) => !(v instanceof Boolean)),
+            ...objectValues.filter(
+                (v) => Object.prototype.toString.call(v) !== '[object Boolean]',
+            ),
             ...functionValues,
         ],
     ],
     [
         'Number',
         isNumberObject,
-        [new Number(1)],
+        [Number(1)],
         [
             ...primitiveValues,
-            ...objectValues.filter((v) => !(v instanceof Number)),
+            ...objectValues.filter(
+                (v) => Object.prototype.toString.call(v) !== '[object Number]',
+            ),
             ...functionValues,
         ],
     ],

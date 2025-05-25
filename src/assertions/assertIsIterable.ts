@@ -1,6 +1,5 @@
 import { isIterable } from '../guards/isIterable';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @remarks
@@ -14,5 +13,7 @@ export function assertIsIterable<T = unknown>(
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is Iterable<T> {
-    createTypeAssertion<Iterable<T>>(isIterable)(input, options);
+    if (!isIterable(input)) {
+        throw new TypeError(options?.message);
+    }
 }

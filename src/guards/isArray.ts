@@ -6,14 +6,14 @@ import { createTypeGuard } from '../utils';
  * @example
  *
  * ```typescript
- * // true, typed as any[]
+ * // true, typed as unknown[]
  * isArray(['xyz']);
  *
  * // true, typed as string[]
  * isArray<string>(['xyz'], { valueValidator: isString });
  * ```
  */
-export function isArray(input: unknown): input is any[];
+export function isArray(input: unknown): input is unknown[];
 export function isArray<T>(
     input: unknown,
     options: ValueValidator,

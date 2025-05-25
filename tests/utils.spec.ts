@@ -14,8 +14,9 @@ describe('createTypeGuard', () => {
     it('creates a type-guard with options', () => {
         const mock = vi.fn((value: unknown) => !!value);
         const typeGuard = createTypeGuard<CustomClass, ValueValidator>(
-            (value, { valueValidator }: ValueValidator) =>
-                valueValidator(value),
+            (value, options) =>
+                value instanceof CustomClass &&
+                (!options?.valueValidator || options.valueValidator(value)),
             {
                 valueValidator: mock,
             },
@@ -27,13 +28,17 @@ describe('createTypeGuard', () => {
 
 describe('createTypeAssertion', () => {
     it('creates a type-assertion with the supplied guard', () => {
-        const customTypeAssertion =
+        const customTypeAssertion: (
+            input: unknown,
+        ) => asserts input is CustomClass =
             createTypeAssertion<CustomClass>(customTypeGuard);
+        const testValue1: unknown = new CustomClass();
+        const testValue2: unknown = [];
         expect(() => {
-            customTypeAssertion(new CustomClass());
+            customTypeAssertion(testValue1);
         }).not.toThrow();
         expect(() => {
-            customTypeAssertion([]);
+            customTypeAssertion(testValue2);
         }).toThrow();
     });
 });

@@ -1,6 +1,5 @@
 import { isGenerator } from '../guards/isGenerator';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @remarks
@@ -12,5 +11,7 @@ export function assertIsGenerator<Y = unknown, R = unknown, N = unknown>(
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is Generator<Y, R, N> {
-    createTypeAssertion<Generator<Y, R, N>>(isGenerator)(input, options);
+    if (!isGenerator(input)) {
+        throw new TypeError(options?.message);
+    }
 }

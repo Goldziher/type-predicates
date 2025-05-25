@@ -1,5 +1,5 @@
+import type { ErrorMessage } from '../types';
 import { isRegExp } from '../guards/isRegExp';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
@@ -15,4 +15,8 @@ import { createTypeAssertion } from '../utils';
  *
  * @throws TypeError
  */
-export const assertIsRegExp = createTypeAssertion<RegExp>(isRegExp);
+export function assertIsRegExp(input: unknown, options?: ErrorMessage): asserts input is RegExp {
+    if (!isRegExp(input)) {
+        throw new TypeError(options?.message);
+    }
+}

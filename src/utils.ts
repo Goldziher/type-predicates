@@ -1,37 +1,10 @@
-import {
-    ErrorMessage,
-    TypeAssertion,
-    TypeAssertionOptions,
-    TypeGuard,
-    TypeGuardOptions,
-    TypeValidator,
-} from './types';
+import { TypeGuard, TypeGuardOptions, TypeValidator } from './types';
 
 /*
  * @internal
  * */
 export const toObjectString = (value: unknown): string =>
     Object.prototype.toString.call(value);
-
-/**
- * @category Utility
- * @example
- *
- * ```typescript
- * // myTypeAssertion === (input: unknown) => asserts input is MyClass
- * const myTypeAssertion = createTypeAssertion<MyClass>(guard: TypeGuard<MyClass>)
- * ```
- */
-export function createTypeAssertion<
-    T,
-    O extends TypeAssertionOptions | undefined = ErrorMessage,
->(guard: TypeGuard<T, any>): TypeAssertion<T, O> {
-    return (input: unknown, options?: O): asserts input is T => {
-        if (!guard(input, options)) {
-            throw new TypeError(options?.message);
-        }
-    };
-}
 
 /**
  * @category Utility
@@ -59,7 +32,7 @@ export function createTypeGuard<
  * @example
  *
  * ```typescript
- * // unionTypeGuard === <T>(input: unknown, ...args: any[]) => input is T
+ * // unionTypeGuard === <T>(input: unknown, ...args: unknown[]) => input is T
  * const unionTypeGuard = isUnion<string | number | symbol>(
  *     isString,
  *     isNumber,
@@ -68,9 +41,8 @@ export function createTypeGuard<
  * ```
  */
 export function isUnion<T>(...guards: TypeGuard<T>[]): TypeGuard<T> {
-    return function (input: unknown, ...args: any[]): input is T {
+    return function (input: unknown, ...args: unknown[]): input is T {
         for (const guard of guards) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             if (guard(input, ...args)) {
                 return true;
             }

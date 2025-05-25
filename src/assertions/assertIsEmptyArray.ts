@@ -1,8 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isEmptyArray } from '../guards/isEmptyArray';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsEmptyArray = createTypeAssertion<[]>(isEmptyArray);
+export function assertIsEmptyArray(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is [] {
+    if (!isEmptyArray(input)) {
+        throw new TypeError(options?.message);
+    }
+}

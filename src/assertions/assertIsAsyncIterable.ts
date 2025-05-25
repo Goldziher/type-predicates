@@ -1,6 +1,5 @@
 import { isAsyncIterable } from '../guards/isAsyncIterable';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @remarks
@@ -13,5 +12,7 @@ export function assertIsAsyncIterable<T = unknown>(
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is AsyncIterable<T> {
-    createTypeAssertion<AsyncIterable<T>>(isAsyncIterable)(input, options);
+    if (!isAsyncIterable(input)) {
+        throw new TypeError(options?.message);
+    }
 }

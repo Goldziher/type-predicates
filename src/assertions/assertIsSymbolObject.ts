@@ -1,8 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isSymbolObject } from '../guards/isSymbolObject';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsSymbolObject = createTypeAssertion<symbol>(isSymbolObject);
+export function assertIsSymbolObject(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is symbol {
+    if (!isSymbolObject(input)) {
+        throw new TypeError(options?.message);
+    }
+}

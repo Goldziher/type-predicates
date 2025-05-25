@@ -1,8 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isBigIntObject } from '../guards/isBigIntObject';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsBigIntObject = createTypeAssertion<bigint>(isBigIntObject);
+export function assertIsBigIntObject(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is bigint {
+    if (!isBigIntObject(input)) {
+        throw new TypeError(options?.message);
+    }
+}

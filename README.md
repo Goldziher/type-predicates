@@ -39,7 +39,7 @@ yarn add @tool-belt/type-predicates
 import { isArray } from 'util/types';
 const arr: unknown = ['a', 'b', 'c'];
 if (isArray(arr)) {
-    // arr is typed as "any[]" - not very useful
+    // arr is typed as "unknown[]" - not very useful
 }
 
 // @tool-belt/type-predicates
@@ -166,19 +166,12 @@ const isStringRecord = (value: unknown): value is Record<string, string> =>
 #### Utility Functions
 
 ```typescript
-import {
-    createTypeGuard,
-    createTypeAssertion,
-    isUnion,
-} from '@tool-belt/type-predicates';
+import { createTypeGuard, isUnion } from '@tool-belt/type-predicates';
 
 // Create custom guards
 const isNonEmptyString = createTypeGuard<string>(
     (value) => isString(value) && value.length > 0,
 );
-
-// Create custom assertions
-const assertIsNonEmptyString = createTypeAssertion(isNonEmptyString);
 
 // Union types
 const isNumberOrString = isUnion(isNumber, isString);
@@ -285,7 +278,6 @@ const isNumberOrString = isUnion(isNumber, isString);
 ### Utility Functions
 
 - `createTypeGuard` - Create custom type guards
-- `createTypeAssertion` - Create custom type assertions
 - `isUnion` - Combine multiple type guards with OR logic
 
 ## TypeScript Types and Interfaces
@@ -308,7 +300,7 @@ type TypeAssertion<
 > = (input: unknown, options?: O) => asserts input is T;
 
 // General validator function
-type TypeValidator = (input: unknown, ...args: any[]) => boolean;
+type TypeValidator = (input: unknown, ...args: unknown[]) => boolean;
 ```
 
 ### Option Interfaces
@@ -487,7 +479,6 @@ function processStringList(input: unknown): string[] {
 ```typescript
 import {
     createTypeGuard,
-    createTypeAssertion,
     isObject,
     isString,
     isNumber,
@@ -508,9 +499,6 @@ const isUser = createTypeGuard<User>(
         isString(value.name) &&
         isString(value.email),
 );
-
-// Create corresponding assertion
-const assertIsUser = createTypeAssertion(isUser);
 
 // Use them
 function processUser(data: unknown) {
@@ -672,14 +660,14 @@ import {
 function calculateAverage(values: unknown[]): number {
     const numbers = values.filter(isFinite);
     if (numbers.length === 0) return 0;
-    
+
     const sum = numbers.reduce((a, b) => a + b, 0);
     const avg = sum / numbers.length;
-    
+
     if (isNaN(avg)) {
         throw new Error('Invalid calculation');
     }
-    
+
     return avg;
 }
 

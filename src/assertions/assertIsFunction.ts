@@ -1,6 +1,5 @@
 import { isFunction } from '../guards/isFunction';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @remarks
@@ -9,30 +8,34 @@ import { createTypeAssertion } from '../utils';
  * @example
  *
  * ```typescript
- * // does not throw, value is typed as Function
+ * // does not throw, value is typed as (...args: unknown[]) => unknown
  * assertIsFunction(() => true);
  *
- * // does not throw, value is typed as () => boolean
- * assertIsFunction<() => boolean>(() => true);
+ * // Use type assertion for specific function types
+ * const myFunc = (x: number): string => x.toString();
+ * assertIsFunction(myFunc);
+ * const typedFunc = myFunc as (x: number) => string;
  *
- * // throws
+ * // throws - use isAsyncFunction for async functions
  * assertIsFunction(async () => Promise.resolve(null));
  *
- * // throws
+ * // throws - use isGeneratorFunction for generator functions
  * assertIsFunction(function* () {});
  *
- * // throws
+ * // throws - use isAsyncGeneratorFunction for async generator functions
  * assertIsFunction(async function* () {});
  *
- * // throws
+ * // throws - use isConstructor for class constructors
  * assertIsFunction(MyClass);
  * ```
  *
- * @throws TypeError
+ * @throws {TypeError} Will throw an error if the input is not a function
  */
-export function assertIsFunction<T extends Function = Function>(
+export function assertIsFunction(
     input: unknown,
     options?: ErrorMessage,
-): asserts input is T {
-    createTypeAssertion<T>(isFunction)(input, options);
+): asserts input is (...args: unknown[]) => unknown {
+    if (!isFunction(input)) {
+        throw new TypeError(options?.message);
+    }
 }

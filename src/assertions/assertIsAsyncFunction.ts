@@ -1,6 +1,5 @@
 import { AsyncFunction, isAsyncFunction } from '../guards/isAsyncFunction';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @remarks
@@ -12,5 +11,7 @@ export function assertIsAsyncFunction<T = unknown>(
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is AsyncFunction<T> {
-    createTypeAssertion<AsyncFunction<T>>(isAsyncFunction)(input, options);
+    if (!isAsyncFunction(input)) {
+        throw new TypeError(options?.message);
+    }
 }

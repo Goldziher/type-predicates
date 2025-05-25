@@ -1,6 +1,6 @@
 import { createTypeGuard, toObjectString } from '../utils';
 
-export type AsyncFunction<T = unknown> = (...args: any[]) => Promise<T>;
+export type AsyncFunction<T = unknown> = (...args: unknown[]) => Promise<T>;
 
 /**
  * @remarks

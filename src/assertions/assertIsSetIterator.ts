@@ -1,9 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isSetIterator } from '../guards/isSetIterator';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsSetIterator =
-    createTypeAssertion<IterableIterator<unknown>>(isSetIterator);
+export function assertIsSetIterator(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is IterableIterator<unknown> {
+    if (!isSetIterator(input)) {
+        throw new TypeError(options?.message);
+    }
+}

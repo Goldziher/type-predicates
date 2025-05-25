@@ -1,9 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isArgumentsObject } from '../guards/isArgumentsObject';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsArgumentsObject =
-    createTypeAssertion<IArguments>(isArgumentsObject);
+export function assertIsArgumentsObject(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is IArguments {
+    if (!isArgumentsObject(input)) {
+        throw new TypeError(options?.message);
+    }
+}

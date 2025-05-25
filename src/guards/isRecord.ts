@@ -7,7 +7,7 @@ import { isObject } from './isObject';
  * @example
  *
  * ```typescript
- *  * // true, value is typed as Record<string | symbol, any>
+ *  * // true, value is typed as Record<string | symbol, unknown>
  * isRecord(
  *     { key1: 'aaa', key2: 123 },
  * );
@@ -22,7 +22,9 @@ import { isObject } from './isObject';
  * );
  * ```
  */
-export function isRecord(input: unknown): input is Record<string | symbol, any>;
+export function isRecord(
+    input: unknown,
+): input is Record<string | symbol, unknown>;
 export function isRecord<K extends string | symbol>(
     input: unknown,
     options: KeyValidator,

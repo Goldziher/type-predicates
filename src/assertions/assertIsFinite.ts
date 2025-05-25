@@ -1,8 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isFinite } from '../guards/isFinite';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsFinite = createTypeAssertion<number>(isFinite);
+export function assertIsFinite(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is number {
+    if (!isFinite(input)) {
+        throw new TypeError(options?.message);
+    }
+}

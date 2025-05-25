@@ -16,6 +16,6 @@ import { isObject } from './isObject';
 export const isStringObject = createTypeGuard<string>(
     (value) =>
         isObject(value) &&
-        (toObjectString(value) === '[object String]' ||
-            value instanceof String),
+        toObjectString(value) === '[object String]' &&
+        typeof value.valueOf() === 'string',
 );

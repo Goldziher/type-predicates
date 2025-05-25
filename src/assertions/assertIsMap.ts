@@ -1,6 +1,5 @@
 import { isMap } from '../guards/isMap';
 import { ErrorMessage, KeyValidator, ValueValidator } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
@@ -27,41 +26,49 @@ import { createTypeAssertion } from '../utils';
  */
 export function assertIsMap(
     input: unknown,
-): asserts input is Map<unknown, unknown>;
-export function assertIsMap(
-    input: unknown,
     options?: ErrorMessage,
 ): asserts input is Map<unknown, unknown>;
+
 export function assertIsMap<K>(
     input: unknown,
-    options: KeyValidator,
+    options: (ErrorMessage & KeyValidator) | KeyValidator,
 ): asserts input is Map<K, unknown>;
-export function assertIsMap<K>(
-    input: unknown,
-    options: ErrorMessage & KeyValidator,
-): asserts input is Map<K, unknown>;
+
 export function assertIsMap<V>(
     input: unknown,
-    options: ValueValidator,
+    options: (ErrorMessage & ValueValidator) | ValueValidator,
 ): asserts input is Map<string, V>;
-export function assertIsMap<V>(
-    input: unknown,
-    options: ErrorMessage & ValueValidator,
-): asserts input is Map<string, V>;
+
 export function assertIsMap<K, V>(
     input: unknown,
-    options: KeyValidator & ValueValidator,
+    options:
+        | (ErrorMessage & KeyValidator & ValueValidator)
+        | (KeyValidator & ValueValidator),
 ): asserts input is Map<K, V>;
-export function assertIsMap<K, V>(
-    input: unknown,
-    options: ErrorMessage & KeyValidator & ValueValidator,
-): asserts input is Map<K, V>;
+
 export function assertIsMap<K, V>(
     input: unknown,
     options?: Partial<ErrorMessage & KeyValidator & ValueValidator>,
 ): asserts input is Map<K, V> {
-    createTypeAssertion<
-        Map<K, V>,
-        Partial<ErrorMessage & KeyValidator & ValueValidator> | undefined
-    >(isMap)(input, options);
+    if (!isMap(input)) {
+        throw new TypeError(options?.message);
+    }
+
+    if (options?.keyValidator) {
+        const keys = [...input.keys()];
+        if (!keys.every(options.keyValidator)) {
+            throw new TypeError(
+                options.message,
+            );
+        }
+    }
+
+    if (options?.valueValidator) {
+        const values = [...input.values()];
+        if (!values.every(options.valueValidator)) {
+            throw new TypeError(
+                options.message,
+            );
+        }
+    }
 }

@@ -12,15 +12,23 @@ import { isObject } from './isObject';
  * // true, value is typed as Error
  * isError(new TypeError());
  *
- * // true, value is typed as TypeError
- * isError<TypeError>(new TypeError());
+ * // true, value is still typed as Error (use type assertion if needed)
+ * const error = new TypeError();
+ * if (isError(error)) {
+ *     // error is now typed as Error
+ * }
  *
- * // true, as long as MyCustomError inherits Error
- * isError<MyCustomError>(new MyCustomError());
+ * // For custom errors, you can use type assertion
+ * class MyCustomError extends Error {}
+ * const customError = new MyCustomError();
+ * if (isError(customError)) {
+ *     // customError is typed as Error
+ *     const myError = customError as MyCustomError;
+ * }
  * ```
  */
-export function isError<T extends Error = Error>(input: unknown): input is T {
-    return createTypeGuard<T>(
+export function isError(input: unknown): input is Error {
+    return createTypeGuard<Error>(
         (value) =>
             isObject(value) &&
             (toObjectString(value) === '[object Error]' ||

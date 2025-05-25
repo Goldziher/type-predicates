@@ -3,7 +3,6 @@ import {
     TypedAsyncGeneratorFunction,
 } from '../guards/isAsyncGeneratorFunction';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
@@ -17,7 +16,9 @@ export function assertIsAsyncGeneratorFunction<
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is TypedAsyncGeneratorFunction<Y, R, N> {
-    createTypeAssertion<TypedAsyncGeneratorFunction<Y, R, N>>(
-        isAsyncGeneratorFunction,
-    )(input, options);
+    if (!isAsyncGeneratorFunction(input)) {
+        throw new TypeError(
+            options?.message ?? 'Expected an async generator function',
+        );
+    }
 }

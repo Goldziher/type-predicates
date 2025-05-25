@@ -1,5 +1,5 @@
 import { isObject } from '../guards/isObject';
-import { createTypeAssertion } from '../utils';
+import type { ErrorMessage } from '../types';
 
 /**
  * @remarks
@@ -20,4 +20,11 @@ import { createTypeAssertion } from '../utils';
  *
  * @throws TypeError
  */
-export const assertIsObject = createTypeAssertion<object>(isObject);
+export function assertIsObject(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is object {
+    if (!isObject(input)) {
+        throw new TypeError(options?.message);
+    }
+}

@@ -1,8 +1,12 @@
+import type { ErrorMessage } from '../types';
 import { isDataView } from '../guards/isDataView';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsDataView = createTypeAssertion<DataView>(isDataView);
+export function assertIsDataView(input: unknown, options?: ErrorMessage): asserts input is DataView {
+    if (!isDataView(input)) {
+        throw new TypeError(options?.message);
+    }
+}

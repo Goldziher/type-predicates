@@ -1,9 +1,12 @@
+import type { ErrorMessage } from '../types';
 import { isArrayBuffer } from '../guards/isArrayBuffer';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsArrayBuffer =
-    createTypeAssertion<ArrayBuffer>(isArrayBuffer);
+export function assertIsArrayBuffer(input: unknown, options?: ErrorMessage): asserts input is ArrayBuffer {
+    if (!isArrayBuffer(input)) {
+        throw new TypeError(options?.message);
+    }
+}

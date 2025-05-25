@@ -1,9 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isPlainObject } from '../guards/isPlainObject';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsPlainObject =
-    createTypeAssertion<Record<string, unknown>>(isPlainObject);
+export function assertIsPlainObject(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is Record<string, unknown> {
+    if (!isPlainObject(input)) {
+        throw new TypeError(options?.message);
+    }
+}

@@ -1,8 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isInteger } from '../guards/isInteger';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsInteger = createTypeAssertion<number>(isInteger);
+export function assertIsInteger(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is number {
+    if (!isInteger(input)) {
+        throw new TypeError(options?.message);
+    }
+}

@@ -1,8 +1,12 @@
+import type { ErrorMessage } from '../types';
 import { isDate } from '../guards/isDate';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsDate = createTypeAssertion<Date>(isDate);
+export function assertIsDate(input: unknown, options?: ErrorMessage): asserts input is Date {
+    if (!isDate(input)) {
+        throw new TypeError(options?.message);
+    }
+}

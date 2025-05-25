@@ -1,13 +1,12 @@
 import { isSet } from '../guards/isSet';
 import { ErrorMessage, ValueValidator } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @example
  *
  * ```typescript
- * // doesn't throw, value is typed as Set<any>
+ * // doesn't throw, value is typed as Set<unknown>
  * assertIsSet(new Set(['xyz']));
  *
  * // doesn't throw, value is typed as Set<string>
@@ -16,21 +15,28 @@ import { createTypeAssertion } from '../utils';
  *
  * @throws TypeError
  */
-export function assertIsSet(input: unknown): asserts input is Set<any>;
 export function assertIsSet(
     input: unknown,
-    options: ErrorMessage,
-): asserts input is Set<any>;
+    options?: ErrorMessage,
+): asserts input is Set<unknown>;
 export function assertIsSet<T>(
     input: unknown,
-    options: ValueValidator,
+    options: (ErrorMessage & ValueValidator) | ValueValidator,
 ): asserts input is Set<T>;
 export function assertIsSet<T>(
     input: unknown,
     options?: Partial<ErrorMessage & ValueValidator>,
 ): asserts input is Set<T> {
-    createTypeAssertion<
-        Set<T>,
-        Partial<ErrorMessage & ValueValidator> | undefined
-    >(isSet)(input, options);
+    if (!isSet(input)) {
+        throw new TypeError(options?.message);
+    }
+
+    if (options?.valueValidator) {
+        const values = [...input];
+        if (!values.every(options.valueValidator)) {
+            throw new TypeError(
+                options.message,
+            );
+        }
+    }
 }

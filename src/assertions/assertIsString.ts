@@ -1,8 +1,15 @@
 import { isString } from '../guards/isString';
-import { createTypeAssertion } from '../utils';
+import { ErrorMessage } from '../types';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsString = createTypeAssertion<string>(isString);
+export function assertIsString(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is string {
+    if (!isString(input)) {
+        throw new TypeError(options?.message);
+    }
+}

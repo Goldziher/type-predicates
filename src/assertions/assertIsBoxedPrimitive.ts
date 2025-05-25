@@ -1,10 +1,17 @@
+import type { ErrorMessage } from '../types';
 import { isBoxedPrimitive } from '../guards/isBoxedPrimitive';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsBoxedPrimitive = createTypeAssertion<
-    bigint | boolean | number | string | symbol
->(isBoxedPrimitive);
+export function assertIsBoxedPrimitive(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is bigint | boolean | number | string | symbol {
+    if (!isBoxedPrimitive(input)) {
+        throw new TypeError(
+            options?.message ?? 'Input is not a boxed primitive',
+        );
+    }
+}

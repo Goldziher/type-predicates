@@ -16,6 +16,6 @@ import { isObject } from './isObject';
 export const isBooleanObject = createTypeGuard<boolean>(
     (value) =>
         isObject(value) &&
-        (toObjectString(value) === '[object Boolean]' ||
-            value instanceof Boolean),
+        toObjectString(value) === '[object Boolean]' &&
+        typeof value.valueOf() === 'boolean',
 );

@@ -1,7 +1,7 @@
 import { createTypeGuard, toObjectString } from '../utils';
 
 export type TypedAsyncGeneratorFunction<Y, R, N> = (
-    ...args: any[]
+    ...args: unknown[]
 ) => AsyncGenerator<Y, R, N>;
 
 /**

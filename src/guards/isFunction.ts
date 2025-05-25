@@ -7,29 +7,33 @@ import { createTypeGuard, toObjectString } from '../utils';
  * @example
  *
  * ```typescript
- * // true, value is typed as Function
+ * // true, value is typed as (...args: unknown[]) => unknown
  * isFunction(() => null);
  *
- * // true, value is typed as () => null
- * isFunction<() => null>(() => null);
- *
- * // false
+ * // false - use isAsyncFunction for async functions
  * isFunction(async () => Promise.resolve(null));
  *
- * // false
+ * // false - use isGeneratorFunction for generator functions
  * isFunction(function* () {});
  *
- * // false
+ * // false - use isAsyncGeneratorFunction for async generator functions
  * isFunction(async function* () {});
  *
- * // false
+ * // false - use isConstructor for class constructors
  * isFunction(MyClass);
+ *
+ * // Type assertion can be used for specific function types
+ * const specificFn = (x: number): string => x.toString();
+ * if (isFunction(specificFn)) {
+ *     // specificFn is now typed as (...args: unknown[]) => unknown
+ *     // Use type assertion if needed: (specificFn as (x: number) => string)(42);
+ * }
  * ```
  */
-export function isFunction<T extends Function = Function>(
+export function isFunction(
     input: unknown,
-): input is T {
-    return createTypeGuard<T>(
+): input is (...args: unknown[]) => unknown {
+    return createTypeGuard<(...args: unknown[]) => unknown>(
         (value) =>
             typeof value === 'function' &&
             toObjectString(value) === '[object Function]',

@@ -23,7 +23,7 @@ import { isObject } from './isObject';
  * );
  * ```
  */
-export function isMap(input: unknown): input is Map<any, any>;
+export function isMap(input: unknown): input is Map<unknown, unknown>;
 export function isMap<K>(
     input: unknown,
     options: KeyValidator,
@@ -43,18 +43,32 @@ export function isMap<K, V>(
     return createTypeGuard<
         Map<K, V>,
         Partial<KeyValidator & ValueValidator> | undefined
-    >(
-        (value) =>
-            (value instanceof Map ||
-                (isObject(value) &&
-                    toObjectString(value) === '[object Map]')) &&
-            (!options?.valueValidator ||
-                [...(value as Map<any, any>).values()].every(
-                    options.valueValidator,
-                )) &&
-            (!options?.keyValidator ||
-                [...(value as Map<any, any>).keys()].every(
-                    options.keyValidator,
-                )),
-    )(input);
+    >((value) => {
+        if (
+            !(value instanceof Map) &&
+            (!isObject(value) || toObjectString(value) !== '[object Map]')
+        ) {
+            return false;
+        }
+
+        const map = value as Map<unknown, unknown>;
+
+        if (options?.valueValidator) {
+            for (const v of map.values()) {
+                if (!options.valueValidator(v)) {
+                    return false;
+                }
+            }
+        }
+
+        if (options?.keyValidator) {
+            for (const k of map.keys()) {
+                if (!options.keyValidator(k)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    })(input);
 }

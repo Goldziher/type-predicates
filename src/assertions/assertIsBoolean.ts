@@ -1,8 +1,15 @@
 import { isBoolean } from '../guards/isBoolean';
-import { createTypeAssertion } from '../utils';
+import { ErrorMessage } from '../types';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsBoolean = createTypeAssertion<boolean>(isBoolean);
+export function assertIsBoolean(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is boolean {
+    if (!isBoolean(input)) {
+        throw new TypeError(options?.message);
+    }
+}

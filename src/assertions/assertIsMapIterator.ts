@@ -1,9 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isMapIterator } from '../guards/isMapIterator';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsMapIterator =
-    createTypeAssertion<IterableIterator<[unknown, unknown]>>(isMapIterator);
+export function assertIsMapIterator(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is IterableIterator<[unknown, unknown]> {
+    if (!isMapIterator(input)) {
+        throw new TypeError(options?.message);
+    }
+}

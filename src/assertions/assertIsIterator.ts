@@ -1,6 +1,5 @@
 import { isIterator } from '../guards/isIterator';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @remarks
@@ -12,5 +11,7 @@ export function assertIsIterator<Y = unknown, R = unknown, N = unknown>(
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is Iterator<Y, R, N> {
-    createTypeAssertion<Iterator<Y, R, N>>(isIterator)(input, options);
+    if (!isIterator(input)) {
+        throw new TypeError(options?.message);
+    }
 }

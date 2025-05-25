@@ -1,9 +1,12 @@
+import type { ErrorMessage } from '../types';
 import { isSharedArrayBuffer } from '../guards/isSharedArrayBuffer';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsSharedArrayBuffer =
-    createTypeAssertion<SharedArrayBuffer>(isSharedArrayBuffer);
+export function assertIsSharedArrayBuffer(input: unknown, options?: ErrorMessage): asserts input is SharedArrayBuffer {
+    if (!isSharedArrayBuffer(input)) {
+        throw new TypeError(options?.message);
+    }
+}

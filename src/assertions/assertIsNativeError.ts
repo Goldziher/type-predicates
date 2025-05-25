@@ -1,8 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isNativeError } from '../guards/isNativeError';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsNativeError = createTypeAssertion<Error>(isNativeError);
+export function assertIsNativeError(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is Error {
+    if (!isNativeError(input)) {
+        throw new TypeError(options?.message);
+    }
+}

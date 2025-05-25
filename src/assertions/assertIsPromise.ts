@@ -1,6 +1,5 @@
 import { isPromise } from '../guards/isPromise';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @remarks
@@ -12,5 +11,7 @@ export function assertIsPromise<T = unknown>(
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is Promise<T> {
-    createTypeAssertion<Promise<T>>(isPromise)(input, options);
+    if (!isPromise(input)) {
+        throw new TypeError(options?.message);
+    }
 }

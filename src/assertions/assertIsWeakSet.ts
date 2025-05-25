@@ -1,14 +1,15 @@
 import { isWeakSet } from '../guards/isWeakSet';
 import { ErrorMessage } from '../types';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export function assertIsWeakSet<T extends object = any>(
+export function assertIsWeakSet<T extends object>(
     input: unknown,
     options?: ErrorMessage,
 ): asserts input is WeakSet<T> {
-    createTypeAssertion<WeakSet<T>>(isWeakSet)(input, options);
+    if (!isWeakSet(input)) {
+        throw new TypeError(options?.message);
+    }
 }

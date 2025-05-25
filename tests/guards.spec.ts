@@ -2,22 +2,30 @@ import { expectTypeOf } from 'expect-type';
 
 import {
     isAnyArrayBuffer,
+    isArgumentsObject,
     isArray,
     isArrayBuffer,
+    isArrayBufferView,
     isAsyncFunction,
     isAsyncGenerator,
     isAsyncGeneratorFunction,
     isAsyncIterable,
     isBigInt,
     isBigInt64Array,
+    isBigIntObject,
     isBigUint64Array,
     isBoolean,
     isBooleanObject,
+    isBoxedPrimitive,
     isBuffer,
     isDataView,
     isDate,
     isDefined,
+    isEmptyArray,
+    isEmptyObject,
+    isEmptyString,
     isError,
+    isFinite,
     isFloat32Array,
     isFloat64Array,
     isFunction,
@@ -26,9 +34,15 @@ import {
     isInt8Array,
     isInt16Array,
     isInt32Array,
+    isInteger,
     isIterable,
     isIterator,
     isMap,
+    isMapIterator,
+    isNaN,
+    isNativeError,
+    isNonEmptyArray,
+    isNonEmptyString,
     isNotNull,
     isNotNullish,
     isNull,
@@ -36,14 +50,18 @@ import {
     isNumber,
     isNumberObject,
     isObject,
+    isPlainObject,
     isPromise,
     isRecord,
     isRegExp,
+    isSafeInteger,
     isSet,
+    isSetIterator,
     isSharedArrayBuffer,
     isString,
     isStringObject,
     isSymbol,
+    isSymbolObject,
     isTypedArray,
     isUint8Array,
     isUint8ClampedArray,
@@ -130,56 +148,89 @@ const functionValues = [
 describe('isArray', () => {
     it('returns true for positively tested array values', () => {
         expect(
-            isArray<string>(stringArray, { valueValidator: isString }),
+            isArray<string>(stringArray, {
+                valueValidator: (v) => isString(v),
+            }),
         ).toBeTruthy();
         expect(
-            isArray<number>(numberArray, { valueValidator: isNumber }),
+            isArray<number>(numberArray, {
+                valueValidator: (v) => isNumber(v),
+            }),
         ).toBeTruthy();
         expect(
-            isArray<symbol>(symbolArray, { valueValidator: isSymbol }),
+            isArray<symbol>(symbolArray, {
+                valueValidator: (v) => isSymbol(v),
+            }),
         ).toBeTruthy();
         expect(
-            isArray<object>(recordArray, { valueValidator: isObject }),
+            isArray<object>(recordArray, {
+                valueValidator: (v) => isObject(v),
+            }),
         ).toBeTruthy();
         expect(
             isArray<number | string>([...stringArray, ...numberArray], {
-                valueValidator: isUnion<number | string>(isString, isNumber),
+                valueValidator: (v) =>
+                    isUnion<number | string>(isString, isNumber)(v),
             }),
         ).toBeTruthy();
     });
     it('returns false for negatively tested array values', () => {
         expect(
-            isArray<string>(stringArray, { valueValidator: isNumber }),
+            isArray<string>(stringArray, {
+                valueValidator: (v) => isNumber(v),
+            }),
         ).toBeFalsy();
         expect(
-            isArray<number>(numberArray, { valueValidator: isString }),
+            isArray<number>(numberArray, {
+                valueValidator: (v) => isString(v),
+            }),
         ).toBeFalsy();
         expect(
-            isArray<symbol>(symbolArray, { valueValidator: isObject }),
+            isArray<symbol>(symbolArray, {
+                valueValidator: (v) => isObject(v),
+            }),
         ).toBeFalsy();
         expect(
-            isArray<object>(recordArray, { valueValidator: isSymbol }),
+            isArray<object>(recordArray, {
+                valueValidator: (v) => isSymbol(v),
+            }),
         ).toBeFalsy();
         expect(
             isArray<number | string>([...symbolArray, ...recordArray], {
-                valueValidator: isUnion<number | string>(isString, isNumber),
+                valueValidator: (v) =>
+                    isUnion<number | string>(isString, isNumber)(v),
             }),
         ).toBeFalsy();
     });
     it('returns false for non-array values', () => {
-        expect(isArray<string>('', { valueValidator: isString })).toBeFalsy();
-        expect(isArray<string>(null, { valueValidator: isString })).toBeFalsy();
-        expect(isArray<string>(123, { valueValidator: isString })).toBeFalsy();
         expect(
-            isArray<string>(Symbol(), { valueValidator: isString }),
+            isArray<string>('', { valueValidator: (v) => isString(v) }),
         ).toBeFalsy();
-        expect(isArray<string>({}, { valueValidator: isString })).toBeFalsy();
+        expect(
+            isArray<string>(null, { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
+        expect(
+            isArray<string>(123, { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
+        expect(
+            isArray<string>(Symbol(), { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
+        expect(
+            isArray<string>({}, { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
     });
 
     it('guards type correctly', () => {
         const unknownArray: unknown = [...stringArray];
-        if (isArray<string>(unknownArray, { valueValidator: isString })) {
-            expectTypeOf(unknownArray).toMatchTypeOf(stringArray);
+        if (
+            isArray<string>(unknownArray, {
+                valueValidator: (v) => isString(v),
+            })
+        ) {
+            expect(unknownArray).toEqual(stringArray);
+            expectTypeOf(unknownArray).toEqualTypeOf<string[]>();
+        } else {
+            throw new Error('Expected array to pass type guard');
         }
     });
 });
@@ -188,60 +239,87 @@ describe('isSet', () => {
     it('returns true for positively tested set values', () => {
         expect(isSet(new Set(stringArray))).toBeTruthy();
         expect(
-            isSet<string>(new Set(stringArray), { valueValidator: isString }),
+            isSet<string>(new Set(stringArray), {
+                valueValidator: (v) => isString(v),
+            }),
         ).toBeTruthy();
         expect(
-            isSet<number>(new Set(numberArray), { valueValidator: isNumber }),
+            isSet<number>(new Set(numberArray), {
+                valueValidator: (v) => isNumber(v),
+            }),
         ).toBeTruthy();
         expect(
-            isSet<symbol>(new Set(symbolArray), { valueValidator: isSymbol }),
+            isSet<symbol>(new Set(symbolArray), {
+                valueValidator: (v) => isSymbol(v),
+            }),
         ).toBeTruthy();
         expect(
-            isSet<object>(new Set(recordArray), { valueValidator: isObject }),
+            isSet<object>(new Set(recordArray), {
+                valueValidator: (v) => isObject(v),
+            }),
         ).toBeTruthy();
         expect(
             isSet<number | string>(new Set([...numberArray, ...stringArray]), {
-                valueValidator: isUnion<number | string>(isString, isNumber),
+                valueValidator: (v) =>
+                    isUnion<number | string>(isString, isNumber)(v),
             }),
         ).toBeTruthy();
     });
     it('returns false for negatively tested set values', () => {
         expect(
-            isSet<string>(new Set(stringArray), { valueValidator: isNumber }),
+            isSet<string>(new Set(stringArray), {
+                valueValidator: (v) => isNumber(v),
+            }),
         ).toBeFalsy();
         expect(
-            isSet<number>(new Set(numberArray), { valueValidator: isString }),
+            isSet<number>(new Set(numberArray), {
+                valueValidator: (v) => isString(v),
+            }),
         ).toBeFalsy();
         expect(
-            isSet<symbol>(new Set(symbolArray), { valueValidator: isObject }),
+            isSet<symbol>(new Set(symbolArray), {
+                valueValidator: (v) => isObject(v),
+            }),
         ).toBeFalsy();
         expect(
-            isSet<object>(new Set(recordArray), { valueValidator: isSymbol }),
+            isSet<object>(new Set(recordArray), {
+                valueValidator: (v) => isSymbol(v),
+            }),
         ).toBeFalsy();
         expect(
             isSet<number | string>(new Set([...recordArray, ...symbolArray]), {
-                valueValidator: isUnion<number | string>(isString, isNumber),
+                valueValidator: (v) =>
+                    isUnion<number | string>(isString, isNumber)(v),
             }),
         ).toBeFalsy();
     });
     it('returns false for non-set values', () => {
-        expect(isSet<string>('', { valueValidator: isString })).toBeFalsy();
-        expect(isSet<string>(null, { valueValidator: isString })).toBeFalsy();
-        expect(isSet<string>(123, { valueValidator: isString })).toBeFalsy();
         expect(
-            isSet<string>(Symbol(), { valueValidator: isString }),
+            isSet<string>('', { valueValidator: (v) => isString(v) }),
         ).toBeFalsy();
-        expect(isSet<string>({}, { valueValidator: isString })).toBeFalsy();
+        expect(
+            isSet<string>(null, { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
+        expect(
+            isSet<string>(123, { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
+        expect(
+            isSet<string>(Symbol(), { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
+        expect(
+            isSet<string>({}, { valueValidator: (v) => isString(v) }),
+        ).toBeFalsy();
     });
     it('guards type correctly', () => {
         const unknownSet: unknown = new Set(stringArray);
         if (isSet(unknownSet)) {
-            expectTypeOf(unknownSet).toMatchTypeOf(
+            expect([...unknownSet]).toEqual(stringArray);
+            expectTypeOf(unknownSet).toMatchObjectType(
                 new Set<unknown>(stringArray),
             );
         }
-        if (isSet<string>(unknownSet, { valueValidator: isString })) {
-            expectTypeOf(unknownSet).toMatchTypeOf(
+        if (isSet<string>(unknownSet, { valueValidator: (v) => isString(v) })) {
+            expectTypeOf(unknownSet).toMatchObjectType(
                 new Set<string>(stringArray),
             );
         }
@@ -252,20 +330,20 @@ describe('isMap', () => {
     it('returns true for positively tested map values', () => {
         expect(
             isMap<string, string>(stringMap, {
-                keyValidator: isString,
-                valueValidator: isString,
+                keyValidator: (v) => isString(v),
+                valueValidator: (v) => isString(v),
             }),
         ).toBeTruthy();
         expect(
             isMap<number, number>(numberMap, {
-                keyValidator: isNumber,
-                valueValidator: isNumber,
+                keyValidator: (v) => isNumber(v),
+                valueValidator: (v) => isNumber(v),
             }),
         ).toBeTruthy();
         expect(
             isMap<symbol, symbol>(symbolMap, {
-                keyValidator: isSymbol,
-                valueValidator: isSymbol,
+                keyValidator: (v) => isSymbol(v),
+                valueValidator: (v) => isSymbol(v),
             }),
         ).toBeTruthy();
         expect(
@@ -276,16 +354,18 @@ describe('isMap', () => {
                     ...symbolMap,
                 ]),
                 {
-                    keyValidator: isUnion<number | string | symbol>(
-                        isString,
-                        isNumber,
-                        isSymbol,
-                    ),
-                    valueValidator: isUnion<number | string | symbol>(
-                        isString,
-                        isNumber,
-                        isSymbol,
-                    ),
+                    keyValidator: (v) =>
+                        isUnion<number | string | symbol>(
+                            isString,
+                            isNumber,
+                            isSymbol,
+                        )(v),
+                    valueValidator: (v) =>
+                        isUnion<number | string | symbol>(
+                            isString,
+                            isNumber,
+                            isSymbol,
+                        )(v),
                 },
             ),
         ).toBeTruthy();
@@ -296,14 +376,10 @@ describe('isMap', () => {
                     ...booleanMap,
                 ]),
                 {
-                    keyValidator: isUnion<boolean | object>(
-                        isObject,
-                        isBoolean,
-                    ),
-                    valueValidator: isUnion<boolean | object>(
-                        isObject,
-                        isBoolean,
-                    ),
+                    keyValidator: (v) =>
+                        isUnion<boolean | object>(isObject, isBoolean)(v),
+                    valueValidator: (v) =>
+                        isUnion<boolean | object>(isObject, isBoolean)(v),
                 },
             ),
         ).toBeTruthy();
@@ -311,14 +387,14 @@ describe('isMap', () => {
     it('returns false for negatively tested map values', () => {
         expect(
             isMap(stringMap, {
-                keyValidator: isNumber,
-                valueValidator: isNumber,
+                keyValidator: (v) => isNumber(v),
+                valueValidator: (v) => isNumber(v),
             }),
         ).toBeFalsy();
         expect(
             isMap(numberMap, {
-                keyValidator: isString,
-                valueValidator: isString,
+                keyValidator: (v) => isString(v),
+                valueValidator: (v) => isString(v),
             }),
         ).toBeFalsy();
     });
@@ -336,13 +412,22 @@ describe('isMap', () => {
         ]);
         if (
             isMap<object | string, object | string>(unknownMap, {
-                keyValidator: isUnion<object | string>(isObject, isString),
-                valueValidator: isUnion<object | string>(isObject, isString),
+                keyValidator: (v) =>
+                    isUnion<object | string>(isObject, isString)(v),
+                valueValidator: (v) =>
+                    isUnion<object | string>(isObject, isString)(v),
             })
         ) {
-            expectTypeOf(unknownMap).toMatchTypeOf<
-                Map<object | string, object | string>
-            >(new Map<object | string, object | string>());
+            // Verify the map has the expected entries
+            expect([...unknownMap.entries()]).toEqual(
+                expect.arrayContaining([...recordMap, ...stringMap]),
+            );
+            // Verify the type
+            expectTypeOf(unknownMap).toMatchObjectType(
+                new Map<object | string, object | string>(),
+            );
+        } else {
+            throw new Error('Expected map to pass type guard');
         }
     });
 });
@@ -351,20 +436,20 @@ describe('isRecord', () => {
     it('returns true for positively tested record values', () => {
         expect(
             isRecord<string, string>(stringRecord, {
-                keyValidator: isString,
-                valueValidator: isString,
+                keyValidator: (v) => isString(v),
+                valueValidator: (v) => isString(v),
             }),
         ).toBeTruthy();
         expect(
             isRecord<string, number>(numberRecord, {
-                keyValidator: isString,
-                valueValidator: isNumber,
+                keyValidator: (v) => isString(v),
+                valueValidator: (v) => isNumber(v),
             }),
         ).toBeTruthy();
         expect(
             isRecord<symbol, symbol>(symbolRecord, {
-                keyValidator: isSymbol,
-                valueValidator: isSymbol,
+                keyValidator: (v) => isSymbol(v),
+                valueValidator: (v) => isSymbol(v),
             }),
         ).toBeTruthy();
         expect(
@@ -375,16 +460,18 @@ describe('isRecord', () => {
                     ...symbolRecord,
                 },
                 {
-                    keyValidator: isUnion<number | string | symbol>(
-                        isString,
-                        isNumber,
-                        isSymbol,
-                    ),
-                    valueValidator: isUnion<number | string | symbol>(
-                        isString,
-                        isNumber,
-                        isSymbol,
-                    ),
+                    keyValidator: (v) =>
+                        isUnion<number | string | symbol>(
+                            isString,
+                            isNumber,
+                            isSymbol,
+                        )(v),
+                    valueValidator: (v) =>
+                        isUnion<number | string | symbol>(
+                            isString,
+                            isNumber,
+                            isSymbol,
+                        )(v),
                 },
             ),
         ).toBeTruthy();
@@ -392,14 +479,14 @@ describe('isRecord', () => {
     it('returns false for negatively tested record values', () => {
         expect(
             isRecord(stringRecord, {
-                keyValidator: isNumber,
-                valueValidator: isNumber,
+                keyValidator: (v) => isNumber(v),
+                valueValidator: (v) => isNumber(v),
             }),
         ).toBeFalsy();
         expect(
             isRecord(numberRecord, {
-                keyValidator: isString,
-                valueValidator: isString,
+                keyValidator: (v) => isString(v),
+                valueValidator: (v) => isString(v),
             }),
         ).toBeFalsy();
     });
@@ -417,16 +504,24 @@ describe('isRecord', () => {
         };
         if (
             isRecord<string, number | string>(unknownRecord, {
-                keyValidator: isUnion<number | string>(isNumber, isString),
-                valueValidator: isUnion<number | string>(isNumber, isString),
+                keyValidator: (v) =>
+                    isUnion<number | string>(isNumber, isString)(v),
+                valueValidator: (v) =>
+                    isUnion<number | string>(isNumber, isString)(v),
             })
         ) {
-            expectTypeOf(unknownRecord).toMatchTypeOf<
-                Record<string, number | string>
-            >({
+            // Verify the record has the expected properties
+            expect(unknownRecord).toMatchObject({
                 ...numberRecord,
                 ...stringRecord,
             });
+            // Verify the type
+            expectTypeOf(unknownRecord).toMatchObjectType({
+                ...numberRecord,
+                ...stringRecord,
+            });
+        } else {
+            throw new Error('Expected record to pass type guard');
         }
     });
 });
@@ -891,6 +986,292 @@ describe.each([
         [
             ...objectValues.filter((v) => !(v instanceof WeakSet)),
             ...primitiveValues,
+            ...functionValues,
+        ],
+    ],
+    [
+        'PlainObject',
+        isPlainObject,
+        [
+            {},
+            { a: 1 },
+            Object.create(null),
+            Object.create(Object.prototype),
+            Object.create(Object.create(null)),
+        ],
+        [
+            new Date(),
+            [],
+            null,
+            undefined,
+            new CustomClass(),
+            ...functionValues,
+            ...primitiveValues.filter((v): v is boolean | number | string | symbol => Boolean(v) || v === false || v === 0 || v === ''),
+        ],
+    ],
+    [
+        'ArgumentsObject',
+        isArgumentsObject,
+        [
+            (function (...args) {
+                return args;
+            })(1, 2, 3),
+        ],
+        [
+            {},
+            [],
+            null,
+            undefined,
+            ...functionValues,
+            ...primitiveValues,
+        ],
+    ],
+    [
+        'ArrayBufferView',
+        isArrayBufferView,
+        [
+            new Uint8Array(),
+            new Uint16Array(),
+            new Uint32Array(),
+            new Int8Array(),
+            new Int16Array(),
+            new Int32Array(),
+            new Float32Array(),
+            new Float64Array(),
+            new DataView(new ArrayBuffer(8)),
+        ],
+        [
+            new ArrayBuffer(8),
+            [],
+            {},
+            null,
+            undefined,
+            ...functionValues,
+            ...primitiveValues,
+        ],
+    ],
+    [
+        'BigIntObject',
+        isBigIntObject,
+        [new Object(BigInt(123))],
+        [
+            BigInt(123),
+            123,
+            '123',
+            null,
+            undefined,
+            ...objectValues.filter(v => !(Object.prototype.toString.call(v) === '[object BigInt]')),
+            ...functionValues,
+        ],
+    ],
+    [
+        'BoxedPrimitive',
+        isBoxedPrimitive,
+        [
+            new Object('string'),
+            new Object(123),
+            new Object(true),
+            new Object(Symbol('test')),
+            new Object(BigInt(123)),
+        ],
+        [
+            'string',
+            123,
+            true,
+            Symbol('test'),
+            BigInt(123),
+            null,
+            undefined,
+            {},
+            [],
+            ...functionValues,
+        ],
+    ],
+    [
+        'EmptyArray',
+        isEmptyArray,
+        [[]],
+        [
+            [1],
+            ['a'],
+            {}, 
+            '',
+            null,
+            undefined,
+            ...objectValues.filter(v => !Array.isArray(v)),
+            ...functionValues,
+        ],
+    ],
+    [
+        'EmptyObject',
+        isEmptyObject,
+        [{}],
+        [
+            { a: 1 },
+            [],
+            '',
+            null,
+            undefined,
+            ...objectValues.filter(v => Object.keys(v as object).length > 0),
+            ...functionValues,
+        ],
+    ],
+    [
+        'EmptyString',
+        isEmptyString,
+        [''],
+        [
+            'a',
+            ' ',
+            [],
+            {},
+            null,
+            undefined,
+            ...objectValues.filter(v => typeof v !== 'string'),
+            ...functionValues,
+        ],
+    ],
+    [
+        'Finite',
+        isFinite,
+        [0, 1, -1, 1.5, Number.MAX_VALUE, -Number.MAX_VALUE],
+        [
+            Infinity,
+            -Infinity,
+            Number.NaN,
+            '1',
+            true,
+            null,
+            undefined,
+            ...objectValues,
+            ...functionValues,
+        ],
+    ],
+    [
+        'Integer',
+        isInteger,
+        [0, 1, -1, Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER],
+        [
+            1.5,
+            '1',
+            true,
+            null,
+            undefined,
+            ...objectValues,
+            ...functionValues,
+        ],
+    ],
+    [
+        'MapIterator',
+        isMapIterator,
+        [new Map().entries()],
+        [
+            new Map(),
+            new Set(),
+            [],
+            {},
+            null,
+            undefined,
+            ...functionValues,
+            ...primitiveValues,
+        ],
+    ],
+    [
+        'NaN',
+        isNaN,
+        [Number.NaN, Number.NaN],
+        [
+            0,
+            'NaN',
+            null,
+            undefined,
+            ...objectValues,
+            ...functionValues,
+        ],
+    ],
+    [
+        'NativeError',
+        isNativeError,
+        [new Error(), new TypeError(), new RangeError()],
+        [
+            { message: 'error', name: 'Error' },
+            null,
+            undefined,
+            ...objectValues.filter(v => !(v instanceof Error)),
+            ...functionValues,
+        ],
+    ],
+    [
+        'NonEmptyArray',
+        isNonEmptyArray,
+        [[1], ['a'], [{}], [null], [undefined]],
+        [
+            [],
+            {},
+            '',
+            null,
+            undefined,
+            ...objectValues.filter(v => !Array.isArray(v)),
+            ...functionValues,
+        ],
+    ],
+    [
+        'NonEmptyString',
+        isNonEmptyString,
+        ['a', ' ', 'test', '0', 'false'],
+        [
+            '',
+            [],
+            {},
+            null,
+            undefined,
+            ...objectValues.filter(v => typeof v !== 'string'),
+            ...functionValues,
+        ],
+    ],
+    [
+        'SafeInteger',
+        isSafeInteger,
+        [0, 1, -1, Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER],
+        [
+            Number.MAX_SAFE_INTEGER + 1,
+            -Number.MAX_SAFE_INTEGER - 1,
+            1.5,
+            '1',
+            true,
+            null,
+            undefined,
+            ...objectValues,
+            ...functionValues,
+        ],
+    ],
+    [
+        'SetIterator',
+        isSetIterator,
+        [new Set().values()],
+        [
+            new Set(),
+            new Map(),
+            [],
+            {},
+            null,
+            undefined,
+            ...functionValues,
+            ...primitiveValues,
+        ],
+    ],
+    [
+        'SymbolObject',
+        isSymbolObject,
+        [new Object(Symbol('test'))],
+        [
+            Symbol('test'),
+            'symbol',
+            {},
+            [],
+            null,
+            undefined,
+            ...objectValues.filter(v => !(Object.prototype.toString.call(v) === '[object Symbol]')),
             ...functionValues,
         ],
     ],

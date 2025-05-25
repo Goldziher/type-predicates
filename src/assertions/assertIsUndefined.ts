@@ -1,8 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isUndefined } from '../guards/isUndefined';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsUndefined = createTypeAssertion<undefined>(isUndefined);
+export function assertIsUndefined(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is undefined {
+    if (!isUndefined(input)) {
+        throw new TypeError(options?.message);
+    }
+}

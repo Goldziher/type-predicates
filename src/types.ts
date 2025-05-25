@@ -22,14 +22,14 @@ export type TypedArray =
     | Uint8Array
     | Uint8ClampedArray;
 export type TypedGeneratorFunction<Y, R, N> = (
-    ...args: any[]
+    ...args: unknown[]
 ) => Generator<Y, R, N>;
 export type TypeGuard<T, O extends TypeGuardOptions | undefined = undefined> = (
     input: unknown,
     options?: O,
 ) => input is T;
 export type TypeGuardOptions = Partial<KeyValidator & ValueValidator>;
-export type TypeValidator = (input: unknown, ...args: any[]) => boolean;
+export type TypeValidator = (input: unknown, ...args: unknown[]) => boolean;
 export interface ValueValidator {
     valueValidator: TypeValidator;
 }

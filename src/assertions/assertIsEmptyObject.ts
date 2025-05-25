@@ -1,9 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isEmptyObject } from '../guards/isEmptyObject';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsEmptyObject =
-    createTypeAssertion<Record<string, never>>(isEmptyObject);
+export function assertIsEmptyObject(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is Record<string, never> {
+    if (!isEmptyObject(input)) {
+        throw new TypeError(options?.message);
+    }
+}

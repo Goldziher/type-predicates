@@ -1,9 +1,15 @@
+import type { ErrorMessage } from '../types';
 import { isArrayBufferView } from '../guards/isArrayBufferView';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsArrayBufferView =
-    createTypeAssertion<ArrayBufferView>(isArrayBufferView);
+export function assertIsArrayBufferView(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is ArrayBufferView {
+    if (!isArrayBufferView(input)) {
+        throw new TypeError(options?.message);
+    }
+}

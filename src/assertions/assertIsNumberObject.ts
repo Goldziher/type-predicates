@@ -1,5 +1,5 @@
+import type { ErrorMessage } from '../types';
 import { isNumberObject } from '../guards/isNumberObject';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
@@ -15,4 +15,11 @@ import { createTypeAssertion } from '../utils';
  *
  * @throws TypeError
  */
-export const assertIsNumberObject = createTypeAssertion<number>(isNumberObject);
+export function assertIsNumberObject(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is number {
+    if (!isNumberObject(input)) {
+        throw new TypeError(options?.message);
+    }
+}

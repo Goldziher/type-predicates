@@ -1,9 +1,17 @@
+import type { ErrorMessage } from '../types';
 import { isNonEmptyArray } from '../guards/isNonEmptyArray';
-import { createTypeAssertion } from '../utils';
 
 /**
  * @category Type Assertion
  * @throws TypeError
  */
-export const assertIsNonEmptyArray =
-    createTypeAssertion<[unknown, ...unknown[]]>(isNonEmptyArray);
+export function assertIsNonEmptyArray(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is [unknown, ...unknown[]] {
+    if (!isNonEmptyArray(input)) {
+        throw new TypeError(
+            options?.message ?? 'Input is not a non-empty array',
+        );
+    }
+}

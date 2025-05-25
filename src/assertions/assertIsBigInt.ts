@@ -15,7 +15,10 @@ import { isBigInt } from '../guards/isBigInt';
  *
  * @throws TypeError
  */
-export function assertIsBigInt(input: unknown, options?: ErrorMessage): asserts input is bigint {
+export function assertIsBigInt(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is bigint {
     if (!isBigInt(input)) {
         throw new TypeError(options?.message);
     }

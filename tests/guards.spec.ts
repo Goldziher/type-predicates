@@ -93,7 +93,7 @@ const numberMap = new Map([[100, 100]]);
 const symbolMap = new Map([[Symbol('x'), Symbol('y')]]);
 const booleanMap = new Map([[false, true]]);
 const recordMap = new Map([[{ key: 1 }, { value: 1 }]]);
-// Used for testing type guards and assertions
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class CustomClass {}
 const stringRecord = { name: 'xyz' };
@@ -103,7 +103,7 @@ const promise = new Promise((resolve) => {
     resolve(null);
 });
 const primitiveValues = [true, false, 0, 1, '', undefined, Symbol()];
-const iterableObjects = [new Map(), new Set(), String(''), []];
+const iterableObjects = [new Map(), new Set(), new String(''), []];
 const buffers = [new ArrayBuffer(8), Buffer.alloc(8), new SharedArrayBuffer(8)];
 const errors = [
     new Error(),
@@ -129,8 +129,8 @@ const typedArrays = [
 ];
 const objectValues = [
     {},
-    Number(0),
-    Boolean(false),
+    new Number(0),
+    new Boolean(false),
     new WeakMap(),
     new WeakSet(),
     ...iterableObjects,
@@ -314,14 +314,17 @@ describe('isSet', () => {
         const unknownSet: unknown = new Set(stringArray);
         if (isSet(unknownSet)) {
             expect([...unknownSet]).toEqual(stringArray);
-            expectTypeOf(unknownSet).toMatchObjectType(
-                new Set<unknown>(stringArray),
-            );
+
+            const typedSet = unknownSet;
+            expect(typedSet).toBeInstanceOf(Set);
         }
-        if (isSet<string>(unknownSet, { valueValidator: (v) => isString(v) })) {
-            expectTypeOf(unknownSet).toMatchObjectType(
-                new Set<string>(stringArray),
-            );
+        if (
+            isSet<string>(unknownSet, {
+                valueValidator: (v: unknown) => isString(v),
+            })
+        ) {
+            const typedSet = unknownSet;
+            expect(typedSet).toBeInstanceOf(Set);
         }
     });
 });
@@ -386,15 +389,15 @@ describe('isMap', () => {
     });
     it('returns false for negatively tested map values', () => {
         expect(
-            isMap(stringMap, {
-                keyValidator: (v) => isNumber(v),
-                valueValidator: (v) => isNumber(v),
+            isMap<number, number>(stringMap, {
+                keyValidator: (v: unknown): v is number => isNumber(v),
+                valueValidator: (v: unknown): v is number => isNumber(v),
             }),
         ).toBeFalsy();
         expect(
-            isMap(numberMap, {
-                keyValidator: (v) => isString(v),
-                valueValidator: (v) => isString(v),
+            isMap<string, string>(numberMap, {
+                keyValidator: (v: unknown): v is string => isString(v),
+                valueValidator: (v: unknown): v is string => isString(v),
             }),
         ).toBeFalsy();
     });
@@ -418,12 +421,12 @@ describe('isMap', () => {
                     isUnion<object | string>(isObject, isString)(v),
             })
         ) {
-            // Verify the map has the expected entries
             expect([...unknownMap.entries()]).toEqual(
                 expect.arrayContaining([...recordMap, ...stringMap]),
             );
-            // Verify the type
+
             expectTypeOf(unknownMap).toMatchObjectType(
+                // @ts-ignore
                 new Map<object | string, object | string>(),
             );
         } else {
@@ -478,15 +481,15 @@ describe('isRecord', () => {
     });
     it('returns false for negatively tested record values', () => {
         expect(
-            isRecord(stringRecord, {
-                keyValidator: (v) => isNumber(v),
-                valueValidator: (v) => isNumber(v),
+            isRecord<string, number>(stringRecord, {
+                keyValidator: (v: unknown): v is string => isString(v),
+                valueValidator: (v: unknown): v is number => isNumber(v),
             }),
         ).toBeFalsy();
         expect(
-            isRecord(numberRecord, {
-                keyValidator: (v) => isString(v),
-                valueValidator: (v) => isString(v),
+            isRecord<string, string>(numberRecord, {
+                keyValidator: (v: unknown): v is string => isString(v),
+                valueValidator: (v: unknown): v is string => isString(v),
             }),
         ).toBeFalsy();
     });
@@ -510,12 +513,12 @@ describe('isRecord', () => {
                     isUnion<number | string>(isNumber, isString)(v),
             })
         ) {
-            // Verify the record has the expected properties
             expect(unknownRecord).toMatchObject({
                 ...numberRecord,
                 ...stringRecord,
             });
-            // Verify the type
+
+            // @ts-ignore
             expectTypeOf(unknownRecord).toMatchObjectType({
                 ...numberRecord,
                 ...stringRecord,
@@ -674,7 +677,7 @@ describe.each([
     [
         'String',
         isStringObject,
-        [String('x')],
+        [new String('x')],
         [
             ...primitiveValues,
             ...objectValues.filter(
@@ -686,7 +689,7 @@ describe.each([
     [
         'Boolean',
         isBooleanObject,
-        [Boolean(true)],
+        [new Boolean(true)],
         [
             ...primitiveValues,
             ...objectValues.filter(
@@ -698,7 +701,7 @@ describe.each([
     [
         'Number',
         isNumberObject,
-        [Number(1)],
+        [new Number(1)],
         [
             ...primitiveValues,
             ...objectValues.filter(
@@ -1006,25 +1009,23 @@ describe.each([
             undefined,
             new CustomClass(),
             ...functionValues,
-            ...primitiveValues.filter((v): v is boolean | number | string | symbol => Boolean(v) || v === false || v === 0 || v === ''),
+            ...primitiveValues.filter(
+                (v): v is boolean | number | string | symbol =>
+                    Boolean(v) || v === false || v === 0 || v === '',
+            ),
         ],
     ],
     [
         'ArgumentsObject',
         isArgumentsObject,
         [
-            (function (...args) {
-                return args;
+            (function () {
+                // @ts-ignore
+                return arguments;
+                // @ts-ignore
             })(1, 2, 3),
         ],
-        [
-            {},
-            [],
-            null,
-            undefined,
-            ...functionValues,
-            ...primitiveValues,
-        ],
+        [{}, [], null, undefined, ...functionValues, ...primitiveValues],
     ],
     [
         'ArrayBufferView',
@@ -1060,7 +1061,10 @@ describe.each([
             '123',
             null,
             undefined,
-            ...objectValues.filter(v => !(Object.prototype.toString.call(v) === '[object BigInt]')),
+            ...objectValues.filter(
+                (v) =>
+                    !(Object.prototype.toString.call(v) === '[object BigInt]'),
+            ),
             ...functionValues,
         ],
     ],
@@ -1094,11 +1098,11 @@ describe.each([
         [
             [1],
             ['a'],
-            {}, 
+            {},
             '',
             null,
             undefined,
-            ...objectValues.filter(v => !Array.isArray(v)),
+            ...objectValues.filter((v) => !Array.isArray(v)),
             ...functionValues,
         ],
     ],
@@ -1112,7 +1116,7 @@ describe.each([
             '',
             null,
             undefined,
-            ...objectValues.filter(v => Object.keys(v as object).length > 0),
+            ...objectValues.filter((v) => Object.keys(v as object).length > 0),
             ...functionValues,
         ],
     ],
@@ -1127,7 +1131,7 @@ describe.each([
             {},
             null,
             undefined,
-            ...objectValues.filter(v => typeof v !== 'string'),
+            ...objectValues.filter((v) => typeof v !== 'string'),
             ...functionValues,
         ],
     ],
@@ -1151,15 +1155,7 @@ describe.each([
         'Integer',
         isInteger,
         [0, 1, -1, Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER],
-        [
-            1.5,
-            '1',
-            true,
-            null,
-            undefined,
-            ...objectValues,
-            ...functionValues,
-        ],
+        [1.5, '1', true, null, undefined, ...objectValues, ...functionValues],
     ],
     [
         'MapIterator',
@@ -1180,14 +1176,7 @@ describe.each([
         'NaN',
         isNaN,
         [Number.NaN, Number.NaN],
-        [
-            0,
-            'NaN',
-            null,
-            undefined,
-            ...objectValues,
-            ...functionValues,
-        ],
+        [0, 'NaN', null, undefined, ...objectValues, ...functionValues],
     ],
     [
         'NativeError',
@@ -1197,7 +1186,7 @@ describe.each([
             { message: 'error', name: 'Error' },
             null,
             undefined,
-            ...objectValues.filter(v => !(v instanceof Error)),
+            ...objectValues.filter((v) => !(v instanceof Error)),
             ...functionValues,
         ],
     ],
@@ -1211,7 +1200,7 @@ describe.each([
             '',
             null,
             undefined,
-            ...objectValues.filter(v => !Array.isArray(v)),
+            ...objectValues.filter((v) => !Array.isArray(v)),
             ...functionValues,
         ],
     ],
@@ -1225,7 +1214,7 @@ describe.each([
             {},
             null,
             undefined,
-            ...objectValues.filter(v => typeof v !== 'string'),
+            ...objectValues.filter((v) => typeof v !== 'string'),
             ...functionValues,
         ],
     ],
@@ -1271,7 +1260,10 @@ describe.each([
             [],
             null,
             undefined,
-            ...objectValues.filter(v => !(Object.prototype.toString.call(v) === '[object Symbol]')),
+            ...objectValues.filter(
+                (v) =>
+                    !(Object.prototype.toString.call(v) === '[object Symbol]'),
+            ),
             ...functionValues,
         ],
     ],

@@ -15,7 +15,10 @@ import { isRegExp } from '../guards/isRegExp';
  *
  * @throws TypeError
  */
-export function assertIsRegExp(input: unknown, options?: ErrorMessage): asserts input is RegExp {
+export function assertIsRegExp(
+    input: unknown,
+    options?: ErrorMessage,
+): asserts input is RegExp {
     if (!isRegExp(input)) {
         throw new TypeError(options?.message);
     }

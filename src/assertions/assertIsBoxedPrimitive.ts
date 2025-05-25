@@ -10,8 +10,6 @@ export function assertIsBoxedPrimitive(
     options?: ErrorMessage,
 ): asserts input is bigint | boolean | number | string | symbol {
     if (!isBoxedPrimitive(input)) {
-        throw new TypeError(
-            options?.message ?? 'Input is not a boxed primitive',
-        );
+        throw new TypeError(options?.message);
     }
 }

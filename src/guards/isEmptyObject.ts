@@ -3,5 +3,8 @@ import { createTypeGuard } from '../utils';
 
 /** @category Type Guard */
 export const isEmptyObject = createTypeGuard<Record<string, never>>(
-    (value) => isObject(value) && Object.keys(value).length === 0,
+    (value) =>
+        isObject(value) &&
+        !Array.isArray(value) &&
+        Object.keys(value).length === 0,
 );

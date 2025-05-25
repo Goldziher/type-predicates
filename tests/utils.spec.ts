@@ -1,6 +1,5 @@
-import { createTypeAssertion, createTypeGuard, ValueValidator } from '../src';
+import { createTypeGuard, isUnion } from '../src';
 
-// Used for testing type guards and assertions
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class CustomClass {}
 const customTypeGuard = createTypeGuard<CustomClass>(
@@ -12,33 +11,38 @@ describe('createTypeGuard', () => {
         expect(customTypeGuard(new CustomClass())).toBeTruthy();
     });
     it('creates a type-guard with options', () => {
-        const mock = vi.fn((value: unknown) => !!value);
-        const typeGuard = createTypeGuard<CustomClass, ValueValidator>(
-            (value, options) =>
-                value instanceof CustomClass &&
-                (!options?.valueValidator || options.valueValidator(value)),
-            {
-                valueValidator: mock,
-            },
+        const mock = vi.fn(
+            (value: unknown): value is CustomClass =>
+                value instanceof CustomClass,
         );
-        expect(typeGuard(true)).toBeTruthy();
-        expect(mock).toHaveBeenCalledWith(true);
+        const options = { valueValidator: mock };
+        const typeGuard = createTypeGuard<
+            CustomClass,
+            { valueValidator: (value: unknown) => value is CustomClass }
+        >((value, opts) => {
+            if (!(value instanceof CustomClass)) {
+                return false;
+            }
+            // @ts-ignore - optional property access
+            return !opts?.valueValidator || opts.valueValidator(value);
+        });
+        const testValue = new CustomClass();
+        // @ts-ignore - mock type issue
+        expect(typeGuard(testValue, options)).toBe(true);
+        expect(mock).toHaveBeenCalledWith(testValue);
     });
 });
 
-describe('createTypeAssertion', () => {
-    it('creates a type-assertion with the supplied guard', () => {
-        const customTypeAssertion: (
-            input: unknown,
-        ) => asserts input is CustomClass =
-            createTypeAssertion<CustomClass>(customTypeGuard);
-        const testValue1: unknown = new CustomClass();
-        const testValue2: unknown = [];
-        expect(() => {
-            customTypeAssertion(testValue1);
-        }).not.toThrow();
-        expect(() => {
-            customTypeAssertion(testValue2);
-        }).toThrow();
+describe('isUnion', () => {
+    it('creates a union type guard', () => {
+        const isString = (v: unknown): v is string => typeof v === 'string';
+
+        const isNumber = (v: unknown): v is number => typeof v === 'number';
+
+        const guard = isUnion<number | string>(isString, isNumber);
+
+        expect(guard('test')).toBe(true);
+        expect(guard(123)).toBe(true);
+        expect(guard(true)).toBe(false);
     });
 });

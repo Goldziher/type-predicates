@@ -3,6 +3,16 @@ import { createTypeGuard, toObjectString } from '../utils';
 import { isObject } from './isObject';
 
 /**
+ * ```typescript
+ * // true, value is typed as Set<unknown>
+ * isSet(new Set(['xyz']));
+ *
+ * // true, value is typed as Set<string>
+ * isSet<string>(new Set(['xyz']), { valueValidator: isString });
+ * ```
+ *
+ * /**
+ *
  * @category Type Guard
  * @example
  *

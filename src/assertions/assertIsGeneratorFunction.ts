@@ -16,8 +16,6 @@ export function assertIsGeneratorFunction<
     options?: ErrorMessage,
 ): asserts input is TypedGeneratorFunction<Y, R, N> {
     if (!isGeneratorFunction(input)) {
-        throw new TypeError(
-            options?.message ?? 'Expected a generator function',
-        );
+        throw new TypeError(options?.message);
     }
 }

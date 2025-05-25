@@ -57,18 +57,14 @@ export function assertIsMap<K, V>(
     if (options?.keyValidator) {
         const keys = [...input.keys()];
         if (!keys.every(options.keyValidator)) {
-            throw new TypeError(
-                options.message,
-            );
+            throw new TypeError(options.message);
         }
     }
 
     if (options?.valueValidator) {
         const values = [...input.values()];
         if (!values.every(options.valueValidator)) {
-            throw new TypeError(
-                options.message,
-            );
+            throw new TypeError(options.message);
         }
     }
 }

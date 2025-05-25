@@ -50,18 +50,14 @@ export function assertIsRecord<K extends string | symbol, V>(
     if (options?.keyValidator) {
         const keys = Object.keys(input);
         if (!keys.every(options.keyValidator)) {
-            throw new TypeError(
-                options.message,
-            );
+            throw new TypeError(options.message);
         }
     }
 
     if (options?.valueValidator) {
         const values = Object.values(input);
         if (!values.every(options.valueValidator)) {
-            throw new TypeError(
-                options.message,
-            );
+            throw new TypeError(options.message);
         }
     }
 }

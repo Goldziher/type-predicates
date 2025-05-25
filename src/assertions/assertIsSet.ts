@@ -34,9 +34,7 @@ export function assertIsSet<T>(
     if (options?.valueValidator) {
         const values = [...input];
         if (!values.every(options.valueValidator)) {
-            throw new TypeError(
-                options.message,
-            );
+            throw new TypeError(options.message);
         }
     }
 }

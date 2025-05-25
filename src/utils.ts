@@ -1,8 +1,5 @@
 import { TypeGuard, TypeGuardOptions, TypeValidator } from './types';
 
-/*
- * @internal
- * */
 export const toObjectString = (value: unknown): string =>
     Object.prototype.toString.call(value);
 
@@ -41,9 +38,9 @@ export function createTypeGuard<
  * ```
  */
 export function isUnion<T>(...guards: TypeGuard<T>[]): TypeGuard<T> {
-    return function (input: unknown, ...args: unknown[]): input is T {
+    return function (input: unknown): input is T {
         for (const guard of guards) {
-            if (guard(input, ...args)) {
+            if (guard(input)) {
                 return true;
             }
         }

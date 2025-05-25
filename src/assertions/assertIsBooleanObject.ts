@@ -10,8 +10,6 @@ export function assertIsBooleanObject(
     options?: ErrorMessage,
 ): asserts input is boolean {
     if (!isBooleanObject(input)) {
-        throw new TypeError(
-            options?.message ?? 'Input is not a Boolean object',
-        );
+        throw new TypeError(options?.message);
     }
 }

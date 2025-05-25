@@ -36,9 +36,7 @@ export function assertIsBigUint64Array(
     options?: ErrorMessage,
 ): asserts input is BigUint64Array {
     if (!isBigUint64Array(input)) {
-        throw new TypeError(
-            options?.message ?? 'Input is not a BigUint64Array',
-        );
+        throw new TypeError(options?.message);
     }
 }
 
@@ -168,8 +166,6 @@ export function assertIsUint8ClampedArray(
     options?: ErrorMessage,
 ): asserts input is Uint8ClampedArray {
     if (!isUint8ClampedArray(input)) {
-        throw new TypeError(
-            options?.message ?? 'Input is not a Uint8ClampedArray',
-        );
+        throw new TypeError(options?.message);
     }
 }

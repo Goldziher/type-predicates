@@ -10,8 +10,6 @@ export function assertIsNonEmptyArray(
     options?: ErrorMessage,
 ): asserts input is [unknown, ...unknown[]] {
     if (!isNonEmptyArray(input)) {
-        throw new TypeError(
-            options?.message ?? 'Input is not a non-empty array',
-        );
+        throw new TypeError(options?.message);
     }
 }

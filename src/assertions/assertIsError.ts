@@ -2,6 +2,25 @@ import { isError } from '../guards/isError';
 import { ErrorMessage } from '../types';
 
 /**
+ * ```typescript
+ * // does not throw, value is typed as Error
+ * assertIsError(new Error());
+ *
+ * // does not throw, value is typed as Error
+ * // Use type assertion for specific error types
+ * const error = new TypeError();
+ * assertIsError(error);
+ * const typeError = error as TypeError;
+ *
+ * // For custom errors, use type assertion after the check
+ * class MyError extends Error {}
+ * const myError = new MyError();
+ * assertIsError(myError);
+ * const typedError = myError as MyError;
+ * ```
+ *
+ * /**
+ *
  * @category Type Assertion
  * @example
  *

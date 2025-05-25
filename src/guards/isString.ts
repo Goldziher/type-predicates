@@ -1,6 +1,16 @@
 import { createTypeGuard } from '../utils';
 
 /**
+ * ```typescript
+ * // true
+ * isString('xyz');
+ *
+ * // false
+ * isString(new String('xyz'));
+ * ```
+ *
+ * /**
+ *
  * @category Type Guard
  * @example
  *

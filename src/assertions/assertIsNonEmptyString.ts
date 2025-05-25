@@ -10,8 +10,6 @@ export function assertIsNonEmptyString(
     options?: ErrorMessage,
 ): asserts input is string {
     if (!isNonEmptyString(input)) {
-        throw new TypeError(
-            options?.message ?? 'Input is not a non-empty string',
-        );
+        throw new TypeError(options?.message);
     }
 }

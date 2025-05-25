@@ -115,5 +115,5 @@ export * from './guards/isUndefined';
 export * from './guards/isWeakMap';
 export * from './guards/isWeakSet';
 export * from './types';
-export { createTypeAssertion, createTypeGuard } from './utils';
+export { createTypeGuard } from './utils';
 export { isUnion } from './utils';

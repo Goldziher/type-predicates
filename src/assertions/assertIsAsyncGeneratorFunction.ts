@@ -17,8 +17,6 @@ export function assertIsAsyncGeneratorFunction<
     options?: ErrorMessage,
 ): asserts input is TypedAsyncGeneratorFunction<Y, R, N> {
     if (!isAsyncGeneratorFunction(input)) {
-        throw new TypeError(
-            options?.message ?? 'Expected an async generator function',
-        );
+        throw new TypeError(options?.message);
     }
 }

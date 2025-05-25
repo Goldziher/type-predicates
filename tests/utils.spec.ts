@@ -25,9 +25,11 @@ describe('createTypeGuard', () => {
             }
             // @ts-ignore - optional property access
             if (opts?.valueValidator) {
+                // @ts-ignore - optional property access
                 return opts.valueValidator(value);
             }
             return true;
+            // @ts-ignore
         }, options);
         const testValue = new CustomClass();
         expect(typeGuard(testValue)).toBe(true);

@@ -1,21 +1,25 @@
 {
     "name": "@tool-belt/type-predicates",
     "version": "1.4.0",
-    "description": "Collection of performant type-guard utilities",
+    "description": "A comprehensive collection of performant type guards and assertions with excellent TypeScript support",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Goldziher/type-predicates.git"
     },
     "keywords": [
+        "assertions",
+        "guards",
+        "predicates",
+        "runtime-checks",
         "type-assertions",
         "type-guards",
         "type-predicates",
+        "type-safety",
+        "typechecking",
         "typescript",
         "utilities",
         "utils",
-        "guards",
-        "assertions",
-        "predicates"
+        "validation"
     ],
     "author": "Na'aman Hirschfeld",
     "license": "MIT",
@@ -24,19 +28,32 @@
     },
     "homepage": "https://github.com/Goldziher/type-predicates#readme",
     "files": [
-        "dist"
+        "dist",
+        "LICENSE",
+        "README.md"
     ],
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js",
+            "default": "./dist/index.mjs"
+        }
+    },
+    "sideEffects": false,
     "scripts": {
-        "prepublish": "pnpm run build",
+        "prepublishOnly": "pnpm run build",
         "build": "rimraf dist && vite build",
         "format": "prettier --write .",
         "lint": "eslint --fix .",
         "prepare": "husky",
         "typecheck": "tsc --noEmit",
-        "test": "vitest run"
+        "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "test:watch": "vitest"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.8.1",
@@ -76,6 +93,9 @@
         ]
     },
     "engines": {
-        "node": ">=22.0.0"
+        "node": ">=18.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }

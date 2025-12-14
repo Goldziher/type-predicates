@@ -526,7 +526,7 @@ describe.each([
     [
         'bigint',
         assertIsBigInt,
-        [9_007_199_254_740_991n, BigInt(9_007_199_254_740_991)],
+        [9_007_199_254_740_991n, 9_007_199_254_740_991n],
         [0, 1, 'abc', true, null, ...objectValues, ...functionValues],
     ],
     [
@@ -1006,9 +1006,9 @@ describe.each([
     [
         'BigIntObject',
         assertIsBigIntObject,
-        [new Object(BigInt(123))],
+        [new Object(123n)],
         [
-            BigInt(123),
+            123n,
             123,
             '123',
             null,
@@ -1028,14 +1028,14 @@ describe.each([
             new Object(123),
             new Object(true),
             new Object(Symbol('test')),
-            new Object(BigInt(123)),
+            new Object(123n),
         ],
         [
             'string',
             123,
             true,
             Symbol('test'),
-            BigInt(123),
+            123n,
             null,
             undefined,
             {},
